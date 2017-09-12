@@ -1,5 +1,5 @@
 # Game Physics
-Concentrate on how to do physics simulation in digital games
+Concentrate on how to do physics simulation in digital games, and use physics to implement game design ideas.
 
 [NVIDIA PhysX](https://developer.nvidia.com/physx-sdk) will be used as an example.
 
@@ -15,7 +15,6 @@ You have to register through [Github](http://www.github.com/) to access the Phys
 ## Some resources
 1. [Matter.js 2D 物理引擎试玩报告](https://aotu.io/notes/2017/04/17/Matter-js/index.html)
 1. [腾讯Unity3D中的物理引擎培训](http://gad.qq.com/content/coursedetail/7181413)
-
 
 ----
 
