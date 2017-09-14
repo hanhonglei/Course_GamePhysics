@@ -1,0 +1,24 @@
+.mw-plusminus-null {
+	COLOR: #aaa
+}
+.texvc {
+	DIRECTION: ltr; unicode-bidi: embed
+}
+IMG.tex {
+	VERTICAL-ALIGN: middle
+}
+SPAN.texhtml {
+	FONT-FAMILY: serif; WHITE-SPACE: nowrap
+}
+#toolbar {
+	CLEAR: both
+}
+#wpTextbox1 {
+	CLEAR: both
+}
+DIV#mw-js-message {
+	BORDER-RIGHT: #ddd 1px solid; PADDING-RIGHT: 2.5%; BORDER-TOP: #ddd 1px solid; PADDING-LEFT: 2.5%; PADDING-BOTTOM: 0.5em; MARGIN: 1em 5%; BORDER-LEFT: #ddd 1px solid; PADDING-TOP: 0.5em; BORDER-BOTTOM: #ddd 1px solid; BACKGROUND-COLOR: #fcfcfc
+}
+.editsection {
+	FLOAT: right; MARGIN-LEFT: 5px
+}

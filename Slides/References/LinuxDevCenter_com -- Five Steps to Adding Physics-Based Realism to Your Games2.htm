@@ -1,0 +1,613 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0072)http://www.linuxdevcenter.com/pub/a/linux/2001/11/01/physics.html?page=2 -->
+<HTML><HEAD><TITLE>LinuxDevCenter.com -- Five Steps to Adding Physics-Based Realism to Your Games</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META 
+content="LinuxDevCenter.com,O'Reilly Network,oreillynet,oreillynet.com,O'Reilly,OREILLY,,Linux,David M. Bourg,game developing,game developers,gaming,&#13;&#10;Physics for Game Developers,physics,Linux game development,computer &#13;&#10;game development,3-D gaming,3D gaming,damping,physics-based simulations &#13;&#10;for games,physics-based simulations,game simulations,&#13;&#10;David Bourg,bourg,oreilly,O'Reilly,o'reilly" 
+name=keywords>
+<META 
+content="O'Reilly author discusses the five major steps game developers must take when developing physics-based simulations for games. By David Bourg, author of O'Reilly's Physics for Game  Developers (November 2001)." 
+name=description>
+<META content="Nov. 01, 2001" name=date>
+<META content="Five Steps to Adding Physics-Based Realism to Your Games" 
+name=pagename>
+<META content=LinuxDevCenter.com name=site>
+<META content="David M. Bourg" name=author>
+<META content=http://www.linuxdevcenter.com/pub/a/linux/2001/11/01/physics.html 
+name=safariu_url><!-- feed autodiscovery links --><LINK 
+title="Linux DevCenter Articles and Weblogs" 
+href="http://www.oreillynet.com/pub/feed/2" type=application/atom+xml 
+rel=alternate><LINK title="Linux DevCenter Articles and Weblogs" 
+href="http://www.oreillynet.com/pub/feed/2?format=rss1" type=application/rdf+xml 
+rel=alternate><LINK title="Linux DevCenter Articles and Weblogs" 
+href="http://www.oreillynet.com/pub/feed/2?format=rss2" type=application/rss+xml 
+rel=alternate><!-- sc/388 Common JavaScript -->
+<SCRIPT language=JavaScript 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/common.js" 
+type=text/javascript></SCRIPT>
+<LINK 
+href="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/main.css" 
+type=text/css rel=STYLESHEET><!--WEBSIDESTORY CODE HBX1.0 (Universal)--><!--COPYRIGHT 1997-2004 WEBSIDESTORY,INC. ALL RIGHTS RESERVED. U.S.PATENT No. 6,393,479B1. MORE INFO:http://websidestory.com / privacy-->
+<SCRIPT language=javascript type=text/javascript>
+    var _hbEC=0,_hbE=new Array;function _hbEvent(a,b){b=_hbE[_hbEC++]=new Object();b._N=a;b._C=0;return b;}
+    var hbx=_hbEvent("pv");hbx.vpc="HBX0100u";hbx.gn="ehg-oreilly.hitbox.com";
+
+    //"BCB: linuxdevcenter.com,/a/linux/2001/11/01/physics.html, DM5503080AFA";
+
+    hbx.acct="DM5503080AFA;DM520404M4ZR"; //ACCOUNT NUMBER(S)
+    hbx.pn="Five+Steps+to+Adding+Physics-Based+Realism+to+Your+Games"; //PAGE NAME(S)
+    hbx.mlc="/a/linux/2001/11/01/;/linuxdevcenter.com/a/linux/2001/11/01/"; //MULTI-LEVEL CONTENT CATEGORY
+    hbx.pndef="title"; //DEFAULT PAGE NAME
+    hbx.ctdef="full"; //DEFAULT CONTENT CATEGORY
+
+    hbx.lt="auto"; //LINK TRACKING 
+    hbx.dlf="n"; //DOWNLOAD FILTER
+    hbx.dft="n"; //DOWNLOAD FILE NAMING
+    hbx.elf="n"; //EXIT LINK FILTER
+
+    //SEGMENTS AND FUNNELS
+    hbx.seg=""; //VISITOR SEGMENTATION
+    hbx.fnl=""; //FUNNELS
+
+    //CAMPAIGNS
+    hbx.cmp=""; //CAMPAIGN ID
+    hbx.cmpn="CMP"; //CAMPAIGN ID IN QUERY
+    hbx.hra=""; //RESPONSE ATTRIBUTE
+    hbx.hqsr=""; //RESPONSE ATTRIBUTE IN REFERRAL QUERY
+    hbx.hqsp="ATT"; //RESPONSE ATTRIBUTE IN QUERY
+    hbx.hlt=""; //LEAD TRACKING
+    hbx.hla=""; //LEAD ATTRIBUTE
+    hbx.gp=""; //CAMPAIGN GOAL
+    hbx.gpn=""; //CAMPAIGN GOAL IN QUERY
+    hbx.hcn=""; //CONVERSION ATTRIBUTE
+    hbx.hcv=""; //CONVERSION VALUE
+    hbx.cp="null"; //LEGACY CAMPAIGN
+    hbx.cpd=""; //CAMPAIGN DOMAIN
+
+    //CUSTOM VARIABLES
+    hbx.ci="";//CUSTOMER ID
+    hbx.hc1="";//CUSTOM 1
+    hbx.hc2="";//CUSTOM 2
+    hbx.hc3="";//CUSTOM 3
+    hbx.hc4="";//CUSTOM 4 
+    hbx.pec="";//ERROR CODES
+    </SCRIPT>
+
+<SCRIPT language=javascript1.1 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/hbx.js" 
+defer type=text/javascript></SCRIPT>
+<!--//--><!-- END WEBSIDESTORY CODE  --><!-- end hitbox -->
+<SCRIPT 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/tabber.js" 
+type=text/javascript></SCRIPT>
+<!-- additional css --><LINK 
+href="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/articles.css" 
+type=text/css rel=stylesheet>
+<META content="MSHTML 6.00.2900.3132" name=GENERATOR></HEAD>
+<BODY id=linux>
+<DIV id=page>
+<DIV class=noindex id=header>
+<H1><A href="http://www.linuxdevcenter.com/"><IMG height=88 
+alt=LinuxDevCenter.com 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/header_linux_devcenter.gif" 
+width=204 border=0></A></H1><!-- tabs -->
+<DIV id=tabs>
+<DIV class=noindex style="FLOAT: left; WIDTH: 450px; WHITE-SPACE: nowrap"><A 
+href="http://www.oreillynet.com/"><IMG height=16 alt="O'Reilly Network." 
+hspace=0 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/orn_black.gif" 
+width=113 border=0></A><A href="http://www.oreilly.com/"><IMG height=16 
+alt=oreilly.com hspace=0 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/ora_gray.gif" 
+width=82 border=0></A><A href="http://safari.oreilly.com/"><IMG height=16 
+alt="Safari Bookshelf." hspace=0 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/safari_gray.gif" 
+width=114 border=0></A><A href="http://conferences.oreilly.com/"><IMG height=16 
+alt=Conferences. hspace=0 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/conf_gray.gif" 
+width=88 border=0></A></DIV>
+<DIV class="noindex tiny" 
+style="FLOAT: right; WIDTH: 175px; WHITE-SPACE: nowrap"><A 
+href="http://www.linuxdevcenter.com/cs/user/login?x-redirect=/cs/user/home">Sign 
+In/My Account</A> | <A href="http://epoch.oreilly.com/shop/cart.orm">View 
+Cart</A>&nbsp;&nbsp;&nbsp;</DIV></DIV><!-- menubar -->
+<DIV class=noindex>
+<TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#ffffff border=0>
+  <TBODY>
+  <TR bgColor=#ffffff>
+    <TD 
+    style="PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px" 
+    align=middle bgColor=#000000><A class=nolinewhite 
+      href="http://www.oreillynet.com/pub/q/articles">Articles</A></TD>
+    <TD 
+    style="PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px" 
+    align=middle bgColor=#000000><A class=nolinewhite 
+      href="http://weblogs.oreillynet.com/">Weblogs</A></TD>
+    <TD 
+    style="PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px" 
+    align=middle bgColor=#000000><A class=nolinewhite 
+      href="http://www.oreilly.com/catalog/">Books</A></TD>
+    <TD 
+    style="PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px" 
+    align=middle bgColor=#000000><A class=nolinewhite 
+      href="http://www.oreillylearning.com/">Courses</A></TD>
+    <TD 
+    style="PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px" 
+    align=middle bgColor=#000000><A class=nolinewhite 
+      href="http://www.oreilly.com/store/series/sc.csp">Short&nbsp;Cuts</A></TD>
+    <TD 
+    style="PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px" 
+    align=middle bgColor=#000000><A class=nolinewhite 
+      href="http://www.oreillynet.com/podcasts/">Podcasts</A></TD>
+    <TD 
+    style="PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px" 
+    noWrap width="100%" 
+    bgColor=#000000>&nbsp;<!-- right-most cell (empty)--></TD></TR></TBODY></TABLE></DIV>
+<DIV id=leaderboard><IMG style="FLOAT: right" height=90 alt=advertisement 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/ad-tag-vertical.gif" 
+width=11 border=0> 
+<DIV style="MARGIN: 0px auto; WIDTH: 728px">
+<DIV class="adtag " style="WIDTH: 728px"><!-- dy --><!-- begin ad tag -->
+<SCRIPT language=JavaScript type=text/javascript>
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.linuxdevcenter/linuxart;sz=728x90;tile=1;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</SCRIPT>
+<NOSCRIPT><A 
+href="http://ad.doubleclick.net/jump/ttm.linuxdevcenter/linuxart;sz=728x90;tile=1;ord=4148168556?" 
+target=_blank><IMG height=90 alt="" 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/linuxart;sz=728x90;ord=123456789.gif" 
+width=728 border=0></A></NOSCRIPT> <!-- End ad tag --></DIV></DIV></DIV><!-- end leaderboard -->
+<DIV class=tinywhite id=colored-bar-ad style="BACKGROUND-COLOR: #660000" 
+align=center>
+<DIV class="adtag "><!-- dy --><!-- begin ad tag -->
+<SCRIPT language=JavaScript type=text/javascript>
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.linuxdevcenter/textbar;sz=0x0;tile=4;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</SCRIPT>
+<NOSCRIPT><A 
+href="http://ad.doubleclick.net/jump/ttm.linuxdevcenter/textbar;sz=0x0;tile=4;ord=4148168556?" 
+target=_blank><IMG height=0 alt="" 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/textbar;sz=0x0;ord=123456789.gif" 
+width=0 border=0></A></NOSCRIPT> <!-- End ad tag --></DIV></DIV></DIV><!-- end header -->
+<DIV id=page-content>
+<DIV id=article><BR><A 
+onclick="addthis_url   = location.href; addthis_title = document.title; return addthis_click(this);" 
+href="http://www.addthis.com/bookmark.php" target=_blank><IMG height=16 
+alt="AddThis Social Bookmark Button" 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/button1-bm.gif" 
+width=125 border=0></A>
+<SCRIPT type=text/javascript>var addthis_pub = 'odewahn';</SCRIPT>
+
+<SCRIPT 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/widget.htm" 
+type=text/javascript></SCRIPT>
+ 
+<P><!-- begin content--><!-- begin  print-discuss-del.icio.us options -->
+<DIV style="MARGIN: 0px 10px 0px 6px">
+<DIV style="FLOAT: right; WIDTH: 170px"><A class=listen2 
+title="Listen to this page." 
+href="http://asp2.readspeaker.net/cgi-bin/oreillyrsone?lang=us&amp;voice=Paul&amp;customerid=171&amp;url=http://www.oreillynet.com/lpt/a/1326" 
+target=_new>Listen</A> <A class=print 
+title="Go to a print-friendly version of this page." 
+href="http://www.linuxdevcenter.com/lpt/a/1326">Print</A> <A class=subscribe 
+title=Subscribe href="http://www.oreillynet.com/pub/feed/2">Subscribe to 
+Linux</A> <A class=intellitxt 
+href="http://www.oreillynet.com/pub/a/general/intellitxt.html">What are those 
+green links?</A> </DIV></DIV><!-- end  print-discuss-del.icio.us options --><!-- content here --><SPAN 
+id=intelliTxt><!-- mega preparse mp:yes -->
+<P class=secondary><B>Five Steps to Adding Physics-Based Realism to Your 
+Games</B><BR>Pages: <A 
+href="http://www.linuxdevcenter.com/pub/a/linux/2001/11/01/physics.html?page=1">1</A>, 
+<B>2</B> </P>
+<H3>Step 3: Collision Detection and Response</H3>
+<P>It is important to make the distinction between collision detection and 
+collision response. Collision detection is a computational geometry problem 
+involving the determination of whether and where two or more objects have 
+collided. Collision response is a physics problem involving the motion of two or 
+more objects after they have collided. </P><!-- book sidebar begins --><!-- sidebar begins -->
+<TABLE 
+style="BORDER-RIGHT: #333333 1px solid; BORDER-TOP: #333333 1px solid; MARGIN: 8px; BORDER-LEFT: #333333 1px solid; BORDER-BOTTOM: #333333 1px solid" 
+cellSpacing=2 cellPadding=1 width=250 align=right border=1>
+  <TBODY>
+  <TR>
+    <TD 
+    style="BORDER-TOP-STYLE: none; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none" 
+    vAlign=top width=250 bgColor=#ffffff>
+      <P class=medlist style="PADDING-LEFT: 8px; COLOR: #333333"><B>Related 
+      Reading</B></P>
+      <P class=medlist><A 
+      href="http://www.oreilly.com/catalog/physicsgame/"><IMG height=110 
+      alt="Physics for Game Developers" hspace=8 
+      src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/physics_game_developers.gif" 
+      width=85 align=left vspace=8 border=0></A><B><A 
+      href="http://www.oreilly.com/catalog/physicsgame/">Physics for Game 
+      Developers</A></B><BR><SPAN class=smalltext>By David M. Bourg<BR><A 
+      href="http://www.oreilly.com/catalog/physicsgame/toc.html">Table of 
+      Contents</A><BR><A 
+      href="http://www.oreilly.com/catalog/physicsgame/inx.html">Index</A><BR><A 
+      href="http://www.oreilly.com/catalog/physicsgame/chapter/index.html">Sample 
+      Chapter</A><BR><A 
+      href="http://www.oreilly.com/catalog/physicsgame/desc.html">Full 
+      Description</A> </SPAN></P></TD></TR></TBODY></TABLE><!-- sidebar ends --><!-- sidebar ends -->
+<P>Collision detection is a crucial aspect of any real-time simulation where 
+objects are not supposed to be able to pass through each other. Your 
+collision-response algorithms rely on the results of your collision-detection 
+algorithms in order to accurately determine the appropriate response to any 
+collision. Therefore, you should take care in making sure your 
+collision-detection schemes are accurate and reliable. That said, collision 
+detection is no easy task. I personally find it much more difficult to implement 
+robustly than it is to implement the physics aspects of rigid body simulations. 
+For game applications, as I'm sure you are aware, speed is also a major issue, 
+and accurate collision detection can be slow. Generally, you'll want to use a 
+two-phase approach to collision detection. First, you can use a bounding sphere 
+or box check to test whether there are possible collisions between objects. If 
+this check indicates possible collisions, then you'll want to do a more detailed 
+check on the candidate objects to see if they are indeed intersecting.</P><BR 
+clear=all>
+<DIV class="adtag center" style="MARGIN: 8px; WIDTH: 336px"><!-- dy --><!-- begin ad tag -->
+<SCRIPT language=JavaScript type=text/javascript>
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.linuxdevcenter/linuxart;sz=336x280;tile=3;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</SCRIPT>
+<NOSCRIPT><A 
+href="http://ad.doubleclick.net/jump/ttm.linuxdevcenter/linuxart;sz=336x280;tile=3;ord=4148168556?" 
+target=_blank><IMG height=280 alt="" 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/linuxart;sz=336x280;ord=123456789.gif" 
+width=336 border=0></A></NOSCRIPT> <!-- End ad tag --></DIV><BR clear=all><!-- me -->
+<P>There are many approaches you can take for this detailed collision check. The 
+thing you have to keep in mind is the trade-off between accuracy and 
+performance. Kevin Kaiser addresses triangle-to-triangle level collision 
+detection in detail in Chapter 4.5 of <A 
+href="http://www.charlesriver.com/titles/gamegems.html">Game Programming 
+Gems</A>. Nick Bobic also treats polygonal collision detection in his Gamasutra 
+article <A href="http://www.gamasutra.com/features/20000330/bobic_01.htm" 
+target=new>Advanced Collision Detection Techniques</A>. Brian Mertich has also 
+written several <A href="http://www.merl.com/people/mirtich/pubs.html">useful 
+papers on collision detection</A> for real-time simulations.</P>
+<P>Whatever collision-detection scheme you use, there are certain pieces of 
+information that it must provide to you in order for you to simulate physically 
+accurate collision responses. Your collision-detection routine must tell 
+you:</P>
+<UL>
+  <LI>The point of contact on each body. For example, the location of the 
+  contact point relative to the center of gravity of each body involved in the 
+  collision. 
+  <LI>The collision normal vector (and the tangential vector if you're modeling 
+  friction in your collisions). 
+  <LI>The relative velocities of each body at the point or points of contact. 
+  </LI></UL>
+<P>If you're writing a 3-D game complete with detailed polygon models for 
+high-quality rendering, you might be tempted to use those same models in your 
+collision-detection checks for your physics simulation. However, you may not 
+want to do this since it will take more CPU time to do the collision check and 
+may be unnecessary in terms of physical realism. Don't confuse the requirements 
+for visual realism with physical realism. You may find that you need highly 
+detailed polygon models for quality renderings, but your collision model for 
+that object may only need a fraction of the number of polygons. Granted, this 
+approach means you'll have to keep track of two models for each object in your 
+simulation, but the payoff in terms of performance may be well worth it. </P><!-- sidebar begins -->
+<TABLE 
+style="BORDER-RIGHT: #333333 1px solid; BORDER-TOP: #333333 1px solid; MARGIN: 8px; BORDER-LEFT: #333333 1px solid; BORDER-BOTTOM: #333333 1px solid" 
+cellSpacing=2 cellPadding=1 width=250 align=right border=1>
+  <TBODY>
+  <TR>
+    <TD 
+    style="BORDER-TOP-STYLE: none; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none" 
+    vAlign=top width=250 bgColor=#ffffff>
+      <P class=medlist style="PADDING-LEFT: 8px; COLOR: #333333"><B>Related 
+      Reading</B></P>
+      <P class=medlist><A 
+      href="http://www.oreilly.com/catalog/physicsgame/"><IMG height=110 
+      alt="Physics for Game Developers" hspace=8 
+      src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/physics_game_developers.gif" 
+      width=85 align=left vspace=8 border=0></A><B><A 
+      href="http://www.oreilly.com/catalog/physicsgame/">Physics for Game 
+      Developers</A></B><BR><SPAN class=smalltext>By David M. Bourg<BR><A 
+      href="http://www.oreilly.com/catalog/physicsgame/toc.html">Table of 
+      Contents</A><BR><A 
+      href="http://www.oreilly.com/catalog/physicsgame/inx.html">Index</A><BR><A 
+      href="http://www.oreilly.com/catalog/physicsgame/chapter/index.html">Sample 
+      Chapter</A><BR><A 
+      href="http://www.oreilly.com/catalog/physicsgame/desc.html">Full 
+      Description</A> </SPAN></P></TD></TR></TBODY></TABLE><!-- sidebar ends --><!-- pull quote -->
+<TABLE cellSpacing=0 cellPadding=20 width=170 align=left border=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top width=170 bgColor=#ffffff>
+      <P class=pulllinux>It is important to make the distinction between 
+      collision detection and collision response.</P></TD></TR></TBODY></TABLE>
+<P>My treatment of rigid body collision response in my book is based on 
+classical Newtonian impact principles. Bodies that are colliding are treated as 
+rigid regardless of their construction and material. Rigid bodies discussed here 
+do not change shape even upon impact. This, of course, is an idealization. You 
+know from your everyday experience that when objects collide they dent, bend, 
+compress, or crumple. For example, when a baseball strikes a bat, it may 
+compress as much as three quarters of an inch during the millisecond of impact. 
+Notwithstanding this reality, you can rely on the well-established impulse 
+method to approximate rigid body collisions. In this method, an impulsive force 
+is applied to each colliding object at the point or points of impact. This force 
+is calculated such that it changes the velocity of each object instantly, not 
+allowing them to penetrate one another. The method is semi-empirical in that it 
+uses so-called coefficients of restitution to simulate the hardness or softness 
+of various objects. For example, different coefficients of restitution can be 
+used to simulate a rubber ball bouncing off of a hard surface, or a lump of clay 
+that sticks to a surface after a collision.</P>
+<P>This classical approach is widely used in engineering machine design, 
+analysis, and simulations. However, for rigid body simulations there is another 
+class of methods known as <I>penalty methods</I> at your disposal. In penalty 
+methods, the force at impact is represented by a temporary spring that gets 
+compressed between the objects at the point of impact. This spring compresses 
+over a very short time and applies equal and opposite forces to the colliding 
+bodies to simulate collision response. Proponents of this method say it has the 
+advantage of ease of implementation. However, one of the difficulties 
+encountered in its implementation is numerical instability. David Baraff reviews 
+several aspects of penalty methods (as well as other methods) in his paper <A 
+href="http://www-2.cs.cmu.edu/~baraff/papers">Nonpenetrating Rigid Body 
+Simulation</A>. </P>
+<H3>Step 4: Numerical Integration</H3>
+<P>The next aspect of implementing your physics simulator deals with actually 
+solving the equations of motion. The equations of motion can be classified as 
+ordinary differential equations. In some simple cases you can solve these 
+differential equations analytically. However, this won't be the case for general 
+rigid body simulations. Force and moment calculations for your system can get 
+pretty complicated and may even rely on tabulated empirical data, which will 
+prevent you from writing simple mathematical functions that can be easily 
+integrated. This means you have to use numerical-integration techniques to 
+approximately integrate the equations of motion. I say approximately because 
+solutions based on numerical integration won't be exact and will have a certain 
+amount of error depending on the chosen method. I discuss several integration 
+methods, along with sample code, in Chapter 11 of my book. </P>
+<P>By far, the easiest integration method to implement is Euler's method. In 
+this method you first calculate the forces and moments on each object in order 
+to determine acceleration. Recalling the equation for Newton's second law, you 
+can obtain acceleration by dividing the resultant force acting on an object by 
+the object's mass (for angular acceleration you need to divide torques by 
+inertias). Once you have acceleration you can obtain the change in velocity by 
+simply multiplying the acceleration by a small change in time called a <I>time 
+step</I>. The object's new velocity is simply its old velocity plus the change 
+in velocity for the current time step. To obtain the object's new position, you 
+first multiply its velocity by the time step to obtain a change in displacement 
+(position) and then add this change to the object's last position. To minimize 
+numerical errors you must step through your simulation at very small time steps 
+with this method. </P><!-- pull quote -->
+<TABLE cellSpacing=0 cellPadding=20 width=170 align=left border=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top width=170 bgColor=#ffffff>
+      <P class=pulllinux>A major drawback of Euler's method is instability. If 
+      your time steps are too large, then your solution may diverge from the 
+      exact solution, and your simulation may blow up.</P></TD></TR></TBODY></TABLE>
+<P>A major drawback of Euler's method is instability. If your time steps are too 
+large, then your solution may diverge from the exact solution, and your 
+simulation may blow up. For example, I was recently implementing a simulation of 
+water flowing over a dam using a method called <I>Smoothed Particle 
+Hydrodynamics</I>. Initially, I was using Euler's method just so I could get the 
+simulation up and running quickly, with the idea of implementing a better method 
+later. While running the simulation for the first time, the water started 
+flowing over the dam in a fairly realistic manner. However, after a few steps 
+all the particles representing the water took to the air and flew out of my 
+computational domain like meteors. Obviously this is wrong, and is a good 
+example of a solution becoming numerically unstable. To solve the problem I was 
+forced to implement an alternative method sooner than I had anticipated. </P>
+<P>One such method is known as the <I>Improved Euler method</I>. For 
+ill-conditioned problems, this method is far more stable than Euler's method. 
+However, it requires two force calculations for each object in the simulation. 
+Thus, improved accuracy and stability come at a price in terms of CPU time. 
+Other methods, including the Runge-Kutta and Leap-frog methods, also improve 
+accuracy and stability but again at the cost of CPU time, and in some cases 
+increased memory requirements. Sometimes you can offset the increased CPU burden 
+with these improved methods since they allow you to take larger time steps while 
+still maintaining accuracy. The bottom line is that, here again, you're faced 
+with trading off ease of implementation and speed with accuracy and more 
+importantly, stability. </P>
+<H3>Step 5: Tuning</H3>
+<P>The final and arguably the most time-consuming aspect of implementing your 
+physics simulator is tuning (also known as <I>parameter tuning</I>). Many times 
+I've gone through the steps outlined above only to run my simulation to watch it 
+fail. Either the simulation blew up or the behavior of the objects I was trying 
+to simulate was less than accurate. </P>
+<P>When writing any simulation you'll find that there are many empirical 
+coefficients and parameters that you have to estimate, for example, collision 
+tolerances, coefficients of restitution, mass properties, and drag coefficients, 
+among others. In many cases your initial estimates for such parameters may be 
+off, resulting in instability or unrealistic behavior. This means that you'll 
+have to tune such parameters until you get the results you want. By tuning I 
+mean the trial-and-error process of changing certain parameters to see what 
+effect they have on your simulation until you get it to work right. In some 
+cases it may mean implementing new algorithms, as I had to do with the 
+integration scheme in my water simulation, for example. </P>
+<P>There are a couple of things you can do to make this job easier on yourself. 
+First, research the physics behind what it is you are simulating. Try to obtain 
+an understanding of how the system you are simulating actually behaves in the 
+real world. Find out what factors are important: for example, what forces govern 
+the system's behavior, and try to find some real-world empirical data for things 
+such as drag coefficients, coefficients of restitution, friction coefficients, 
+and so on. This will help take some of the guesswork out of setting initial 
+values for such parameters, and help to identify unrealistic behavior.</P>
+<P>Second, don't bury (or spread out) all this data in your source code. Set up 
+a bunch of defines for such data in one file so you can quickly find and change 
+the data as you go through the tuning process. Something you might consider is 
+implementing a mechanism that allows you to change specific data on the fly so 
+you can tune certain aspects of the simulation in real time. I've found this 
+helpful in specific simulations where, for example, I wanted to see the effects 
+of changing viscous drag as the simulation ran. I found it difficult to observe 
+subtle changes in behavior if I had to stop one simulation, change some data, 
+and then rerun the simulation again; especially if the behavior I wanted to 
+observe didn't occur at the start of the simulation but only after many hundreds 
+of time steps.</P>
+<P><I><A href="http://www.linuxdevcenter.com/pub/au/702">David M. Bourg</A> 
+performs computer simulations and develops analysis tools that measure such 
+things as hovercraft performance and the effect of waves on the motion of ships 
+and boats. </I></P>
+<P>O'Reilly &amp; Associates will soon release (November 2001) <A 
+href="http://www.oreilly.com/catalog/physicsgame/">Physics for Game 
+Developers</A>. </P>
+<UL><!--SAMPLE CHAP NOT AVAIL YET
+<li><p>
+<a href="">Sample Chapter [X], [Chapter Title here]</a>, is available 
+free online. 
+</p></li> -->
+  <LI>
+  <P>You can also look at the <!-- TOC AND INDEX NOT AVAIL YET 
+<a href="">Table of Contents</a>, the <a href="">Index</a>, and 
+the --><A href="http://www.oreilly.com/catalog/physicsgame/desc.html">Full 
+  Description</A> of the book. </P>
+  <LI>
+  <P>For more information, or to order the book, <A 
+  href="http://www.oreilly.com/catalog/physicsgame/">click here</A>.</P></LI></UL>
+<HR noShade SIZE=1>
+
+<P>Return to the <A href="http://www.linuxdevcenter.com/linux/">Linux 
+DevCenter</A>.</P></SPAN><!-- end content --><IMG height=1 alt=" " 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/trans.gif" 
+width=400><BR><BR><BR><!-- end content -->
+<DIV class="adtag " style="WIDTH: 7px"><!-- dy --><!-- begin ad tag -->
+<SCRIPT language=JavaScript type=text/javascript>
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.linux/linuxart;sz=7x7;tile=1;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</SCRIPT>
+<NOSCRIPT><A 
+href="http://ad.doubleclick.net/jump/ttm.linux/linuxart;sz=7x7;tile=1;ord=4148168556?" 
+target=_blank><IMG height=7 alt="" 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/linuxart;sz=7x7;ord=123456789.gif" 
+width=7 border=0></A></NOSCRIPT> <!-- End ad tag --></DIV><!-- peter's test of new techtracker tags --></DIV><!-- #article -->
+<DIV id=related><!-- search -->
+<DIV class=sidebar-item>
+<H3>Search Linux</H3>
+<DIV class=sidebar-item-content><NOINDEX>
+<FORM id=search name=searchForm onsubmit=processQuery(); 
+action=http://promosearch.atomz.com/search/promosearch method=get><INPUT id=src 
+accessKey=s maxLength=80 size=10 name=query> <INPUT type=hidden value=test 
+name=sp-q> <INPUT type=hidden value=sp1000a5a9 name=sp-a> <INPUT type=hidden 
+value=ISO-8859-1 name=sp-f> <INPUT type=hidden value=general name=sp-t> <INPUT 
+type=hidden value=cat name=sp-x-1> <INPUT type=hidden value=LinuxDevCenter 
+name=sp-q-1> <INPUT type=hidden value=cat2 name=sp-x-2> <INPUT type=hidden 
+name=sp-q-2> <INPUT type=hidden value=25 name=sp-c> <INPUT type=hidden value=all 
+name=sp-p> <INPUT type=hidden value=Articles|Books|Conferences|Other|Weblogs 
+name=sp-k> <INPUT type=hidden value=LinuxDevCenter name=c> <INPUT type=hidden 
+name=p> <INPUT onclick="return searchverif();" type=submit value=Go name=search> 
+</FORM></NOINDEX></DIV></DIV>
+<DIV class=sidebar-item>
+<H3>Tagged Articles</H3>
+<DIV class="sidebar-item-content tags">
+<P 
+style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 6px; MARGIN: 0px; PADDING-TOP: 10px"><A 
+class=delicious title="Post to del.icio.us." 
+onclick="window.open('http://del.icio.us/post?v=4&amp;partner=orn&amp;noui&amp;jump=close&amp;url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title),'delicious','toolbar=no,width=700,height=400'); return false;" 
+href="http://del.icio.us/post">Be the first to post this article to 
+del.icio.us</A></P></DIV></DIV><!-- sponsored developer resources -->
+<DIV class=sidebar-item>
+<H3>Sponsored Resources</H3>
+<DIV class=sidebar-item-content>
+<UL 
+style="PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 0px 1.2em; PADDING-TOP: 0px">
+  <LI><A 
+  href="http://www.onlamp.com/port25/?CMP=ILC-B46E50467596&amp;ATT=linuxdevcenter">Inside 
+  Port 25</A> 
+  <LI><A href="http://digitalmedia.oreilly.com/lightroom/">Inside Lightroom</A> 
+  </LI></UL></DIV></DIV>
+<DIV class=sidebar-item>
+<H3>Related to this Article</H3>
+<DIV class=sidebar-item-content>
+<P 
+style="PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 10px; PADDING-BOTTOM: 10px; MARGIN: 0px; PADDING-TOP: 0px"><A 
+href="http://www.oreilly.com/catalog/FreeBSD62/?CMP=ILL-4GV796923290&amp;ATT=/linux/2001/11/01/physics.html/"><IMG 
+class=aleft style="PADDING-BOTTOM: 10px" alt="The FreeBSD 6.2 Crash Course" 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/9780596510169_bkt.gif" 
+border=0></A> <A 
+href="http://www.oreilly.com/catalog/FreeBSD62/?CMP=ILL-4GV796923290&amp;ATT=/linux/2001/11/01/physics.html"><B>The 
+FreeBSD 6.2 Crash Course </B></A><BR>by <A 
+href="http://www.oreillynet.com/pub/au/2907">Jem Matzan</A><BR>May 2007<BR><SPAN 
+class=price>$9.99 USD </SPAN></P>
+<DIV class=clear></DIV>
+<P 
+style="PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 10px; PADDING-BOTTOM: 10px; MARGIN: 0px; PADDING-TOP: 0px"><A 
+href="http://www.oreilly.com/catalog/9780596513825/?CMP=ILL-4GV796923290&amp;ATT=/linux/2001/11/01/physics.html/"><IMG 
+class=aleft style="PADDING-BOTTOM: 10px" 
+alt="Managing RPM-Based Systems with Kickstart and Yum" 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/9780596513825_bkt.gif" 
+border=0></A> <A 
+href="http://www.oreilly.com/catalog/9780596513825/?CMP=ILL-4GV796923290&amp;ATT=/linux/2001/11/01/physics.html"><B>Managing 
+RPM-Based Systems with Kickstart and Yum </B></A><BR>by <A 
+href="http://www.oreillynet.com/pub/au/1910">Ethan McCallum</A><BR>March 
+2007<BR><SPAN class=price>$9.99 USD </SPAN></P>
+<DIV class=clear></DIV></DIV></DIV>
+<DIV 
+style="PADDING-BOTTOM: 10px; PADDING-TOP: 10px; BACKGROUND-COLOR: #eee; TEXT-ALIGN: center"><IMG 
+style="PADDING-BOTTOM: 10px" alt=Advertisement 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/advertisement.gif"><BR>
+<DIV align=center>
+<DIV align=center>
+<DIV 
+style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; MARGIN: 2px 0px 20px; PADDING-TOP: 5px">
+<DIV class="adtag "><!-- dy --><!-- begin ad tag -->
+<SCRIPT language=JavaScript type=text/javascript>
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.linuxdevcenter/textbox;sz=$widthx$height;tile=5;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</SCRIPT>
+<NOSCRIPT><A 
+href="http://ad.doubleclick.net/jump/ttm.linuxdevcenter/textbox;sz=$widthx$height;tile=5;ord=4148168556?" 
+target=_blank><IMG height=$height alt="" 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/textbox;sz=$widthx$height;ord=123456789.gif" 
+width=$width border=0></A></NOSCRIPT> <!-- End ad tag --></DIV></DIV></DIV>
+<DIV class="adtag " style="WIDTH: 160px"><!-- dy --><!-- begin ad tag -->
+<SCRIPT language=JavaScript type=text/javascript>
+//<![CDATA[
+var ord = (ord != null ? ord : Math.random()*10000000000000000 );
+document.write('<script language="JavaScript" src="http://ad.doubleclick.net/adj/ttm.linuxdevcenter/linuxart;sz=160x600;tile=2;ord=' + ord + '?" type="text/javascript"><\/script>');
+//]]>
+</SCRIPT>
+<NOSCRIPT><A 
+href="http://ad.doubleclick.net/jump/ttm.linuxdevcenter/linuxart;sz=160x600;tile=2;ord=4148168556?" 
+target=_blank><IMG height=600 alt="" 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/linuxart;sz=160x600;ord=123456789.gif" 
+width=160 border=0></A></NOSCRIPT> <!-- End ad tag --></DIV></DIV></DIV></DIV><!-- #related --></DIV><!-- #page-content --><!-- footer -->
+<DIV class=noindex id=footer>
+<P class=secondary align=center><A 
+href="http://www.linuxdevcenter.com/pub/a/mediakit/contact.html">Contact Us</A> 
+| <A href="http://www.linuxdevcenter.com/mediakit/">Advertise with Us</A> | <A 
+href="http://www.linuxdevcenter.com/pub/a/mediakit/privacy.html">Privacy 
+Policy</A> | <A href="http://press.oreilly.com/">Press Center</A> | <A 
+href="http://jobs.oreilly.com/">Jobs</A> </P>
+<P class=tiny align=center>Copyright © 2000-2006 O'Reilly Media, Inc. All Rights 
+Reserved.<BR>All trademarks and registered trademarks appearing on the O'Reilly 
+Network are the property of their respective owners.</P>
+<P class=tiny align=center>For problems or assistance with this site, email
+<SCRIPT type=text/javascript>
+<!--
+var name = "help";
+var domain = "oreillynet.com";
+var display = "";
+var subject = "";
+var ending = "";
+var style = "";
+document.write('<a class="' + style + '" href="mailto:' + name + '&#64;' + domain + '?subject=' + subject + '">');
+if (display) {
+ document.write(display);
+} else {
+ document.write(name + '&#64;' + domain);
+}
+document.write('</a>' + ending);
+
+// -->
+</SCRIPT>
+ </P><BR></DIV><!-- #footer --></DIV><!-- #page --><!-- start Vibrant Media IntelliTXT Tooltip style sheet -->
+<STYLE type=text/css>.iTt {
+	BORDER-RIGHT: black 1px solid; PADDING-RIGHT: 2px; BORDER-TOP: black 1px solid; PADDING-LEFT: 2px; FONT-WEIGHT: normal; FONT-SIZE: 11px; PADDING-BOTTOM: 2px; BORDER-LEFT: black 1px solid; COLOR: black; PADDING-TOP: 2px; BORDER-BOTTOM: black 1px solid; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica; BACKGROUND-COLOR: lightyellow
+}
+</STYLE>
+<!-- end Vibrant Media IntelliTXT style sheet --><!-- start Vibrant Media IntelliTXT script section -->
+<SCRIPT 
+src="LinuxDevCenter_com -- Five Steps to Adding Physics-Based Realism to Your Games2.files/front.gif" 
+type=text/javascript></SCRIPT>
+<!-- end Vibrant Media IntelliTXT script section --></BODY></HTML>
