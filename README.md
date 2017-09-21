@@ -16,6 +16,8 @@ You have to register through [Github](http://www.github.com/) to access the Phys
 1. [Matter.js 2D 物理引擎试玩报告](https://aotu.io/notes/2017/04/17/Matter-js/index.html)
 1. [腾讯Unity3D中的物理引擎培训](http://gad.qq.com/content/coursedetail/7181413)
 
+All samples have been compiled successfully using [Visual Studio 2015]( https://www.visualstudio.com) which is vc14win32.
+
 ----
 
 - This project is under [GNU GENERAL PUBLIC LICENSE](https://www.gnu.org/licenses/), please check it in the root folder.
