@@ -2,59 +2,6 @@
 //
 
 #include "stdafx.h"
-#include "freeglut\include\GL\freeglut.h"
-#include "foundation/PxFoundationVersion.h"
-#include "foundation/Px.h"
-#include "extensions/PxDefaultAllocator.h"
-
-#include "PxPhysXConfig.h"
-#include "foundation/PxMemory.h"
-#include "extensions/PxDefaultErrorCallback.h"
-#include "cudamanager/PxCudaContextManager.h"
-#include "gpu/PxGpu.h"
-#include "PxPhysicsVersion.h"
-#include "PxPhysics.h"
-#include "common/PxTolerancesScale.h"
-#include "PxSceneDesc.h"
-#include "extensions/PxDefaultCpuDispatcher.h"
-#include "cooking/pxcooking.h"
-#include "pvd/PxPvd.h"
-#include "extensions/PxDefaultSimulationFilterShader.h"
-#include "pvd/PxPvdTransport.h"
-#include "PxScene.h"
-
-#include "PxPhysicsAPI.h"
-
-//#include "PxTkFile.h"
-//#include "PsString.h"
-//#include "PsFPU.h"
-//
-//#include "PxToolkit.h"
-#include "extensions/PxDefaultStreams.h"
-
-#pragma comment(lib, "freeglut.lib")
-
-#pragma comment(lib, "PhysX3DEBUG_X86.lib")
-#pragma comment(lib, "PhysX3CommonDEBUG_X86.lib")
-#pragma comment(lib, "PxFoundationDEBUG_X86.lib")
-#pragma comment(lib, "PhysX3ExtensionsDEBUG.lib")
-#pragma comment(lib, "PxPvdSDKDEBUG_x86.lib")
-using namespace physx;
-PxDefaultAllocator		gAllocator;
-PxDefaultErrorCallback	gErrorCallback;
-
-PxFoundation*			gFoundation = NULL;
-PxPhysics*				gPhysics = NULL;
-
-PxDefaultCpuDispatcher*	gDispatcher = NULL;
-PxScene*				gScene = NULL;
-
-PxMaterial*				gMaterial = NULL;
-
-PxPvd*                  gPvd = NULL;
-
-PxReal stackZ = 10.0f;
-
 #if PX_WINDOWS
 // Starting with Release 302 drivers, application developers can direct the Optimus driver at runtime to use the High Performance
 // Graphics to render any application; even those applications for which there is no existing application profile.
@@ -67,15 +14,20 @@ extern "C"
 }
 #endif
 
-static bool gRecook = false;
-PxDefaultAllocator gDefaultAllocatorCallback;
+/*Global PhyX related parameters*/
+PxDefaultAllocator		gAllocator;
+PxDefaultErrorCallback	gErrorCallback;
+PxFoundation*			gFoundation = NULL;
+PxPhysics*				gPhysics = NULL;
+PxDefaultCpuDispatcher*	gDispatcher = NULL;
+PxScene*				gScene = NULL;
+PxMaterial*				gMaterial = NULL;
+PxPvd*                  gPvd = NULL;
 
-
+/*Global parameters*/
 const int	WINDOW_WIDTH = 1024,
 WINDOW_HEIGHT = 768;
 
-
-//for mouse dragging
 int oldX = 0, oldY = 0;
 float rX = 15, rY = 0;
 float fps = 0;
@@ -84,6 +36,7 @@ int totalFrames = 0;
 int state = 1;
 float dist = -5;
 
+// Render font
 void SetOrthoForFont()
 {
 	glMatrixMode(GL_PROJECTION);
@@ -118,7 +71,6 @@ void RenderSpacedBitmapString(
 		x1 = x1 + glutBitmapWidth(font, *c) + spacing;
 	}
 }
-
 
 void DrawAxes()
 {
@@ -159,6 +111,7 @@ void DrawAxes()
 	glutSolidCone(0.0225, 1, 4, 1);
 	glPopMatrix();
 }
+
 void DrawGrid(int GRID_SIZE)
 {
 	glBegin(GL_LINES);
@@ -174,19 +127,7 @@ void DrawGrid(int GRID_SIZE)
 	glEnd();
 }
 
-//
-//
-//void StepPhysX()
-//{
-//	gScene->simulate(myTimestep);
-//
-//	//...perform useful work here using previous frame's state data        
-//	while (!gScene->fetchResults())
-//	{
-//		// do something useful        
-//	}
-//}
-//
+// Set up PhysX
 void InitializePhysX() {
 	gFoundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gAllocator, gErrorCallback);
 
@@ -212,170 +153,398 @@ void InitializePhysX() {
 	}
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
-	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
-	gScene->addActor(*groundPlane);
+	//PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
+	//gScene->addActor(*groundPlane);
 
 
 	PxShape* shape = gPhysics->createShape(PxBoxGeometry(2.0f, 2.0f, 2.0f), *gMaterial);
 
-			PxTransform localTm(PxVec3(0.0f, 10.0f, 0) );
-			PxRigidDynamic* body = gPhysics->createRigidDynamic(localTm);
-			body->attachShape(*shape);
-			PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-			gScene->addActor(*body);
+	PxTransform localTm(PxVec3(0.0f, 5.0f, -20.f));
+	PxRigidDynamic* body = gPhysics->createRigidDynamic(localTm);
+	body->attachShape(*shape);
+	PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	gScene->addActor(*body);
 
 	shape->release();
 
-	/*for (PxU32 i = 0; i<5; i++)
-		createStack(PxTransform(PxVec3(0, 0, stackZ -= 10.0f)), 10, 2.0f);
-
-	if (!interactive)
-		createDynamic(PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10), PxVec3(0, -50, -100));*/
-
+	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10), *gMaterial, 10.0f);
+	dynamic->setAngularDamping(0.5f);
+	dynamic->setLinearVelocity(PxVec3(0, -50, -100));
+	gScene->addActor(*dynamic);
 }
-//	gPhysicsSDK = PxCreatePhysics(PX_PHYSICS_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback, PxTolerancesScale());
-//	if (gPhysicsSDK == NULL) {
-//		cerr << "Error creating PhysX3 device." << endl;
-//		cerr << "Exiting..." << endl;
-//		exit(1);
-//	}
-//
-//	if (!PxInitExtensions(*gPhysicsSDK))
-//		cerr << "PxInitExtensions failed!" << endl;
-//
-//	//PxExtensionVisualDebugger::connect(gPhysicsSDK->getPvdConnectionManager(),"localhost",5425, 10000, true);
-//
-//
-//	//Create the scene
-//	PxSceneDesc sceneDesc(gPhysicsSDK->getTolerancesScale());
-//	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
-//
-//	if (!sceneDesc.cpuDispatcher) {
-//		PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
-//		if (!mCpuDispatcher)
-//			cerr << "PxDefaultCpuDispatcherCreate failed!" << endl;
-//		sceneDesc.cpuDispatcher = mCpuDispatcher;
-//	}
-//	if (!sceneDesc.filterShader)
-//		sceneDesc.filterShader = gDefaultFilterShader;
-//
-//
-//	gScene = gPhysicsSDK->createScene(sceneDesc);
-//	if (!gScene)
-//		cerr << "createScene failed!" << endl;
-//
-//	gScene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0);
-//	gScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
-//
-//
-//	PxMaterial* mMaterial = gPhysicsSDK->createMaterial(0.5, 0.5, 0.5);
-//
-//	//Create actors 
-//	//1) Create ground plane
-//	PxReal d = 0.0f;
-//	PxTransform pose = PxTransform(PxVec3(0.0f, 0, 0.0f), PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
-//
-//	PxRigidStatic* plane = gPhysicsSDK->createRigidStatic(pose);
-//	if (!plane)
-//		cerr << "create plane failed!" << endl;
-//
-//	PxShape* shape = plane->createShape(PxPlaneGeometry(), *mMaterial);
-//	if (!shape)
-//		cerr << "create shape failed!" << endl;
-//	gScene->addActor(*plane);
-//
-//
-//	//2) Create cube	 
-//	PxReal density = 1.0f;
-//	PxTransform transform(PxVec3(0.0f, 10.0f, 0.0f), PxQuat::createIdentity());
-//	PxVec3 dimensions(0.5, 0.5, 0.5);
-//	PxBoxGeometry geometry(dimensions);
-//
-//	PxRigidDynamic *actor = PxCreateDynamic(*gPhysicsSDK, transform, geometry, *mMaterial, density);
-//	actor->setAngularDamping(0.75);
-//	actor->setLinearVelocity(PxVec3(0, 0, 0));
-//	if (!actor)
-//		cerr << "create actor failed!" << endl;
-//	gScene->addActor(*actor);
-//
-//	box = actor;
-//}
-//
-//void getColumnMajor(PxMat33 m, PxVec3 t, float* mat) {
-//	mat[0] = m.column0[0];
-//	mat[1] = m.column0[1];
-//	mat[2] = m.column0[2];
-//	mat[3] = 0;
-//
-//	mat[4] = m.column1[0];
-//	mat[5] = m.column1[1];
-//	mat[6] = m.column1[2];
-//	mat[7] = 0;
-//
-//	mat[8] = m.column2[0];
-//	mat[9] = m.column2[1];
-//	mat[10] = m.column2[2];
-//	mat[11] = 0;
-//
-//	mat[12] = t[0];
-//	mat[13] = t[1];
-//	mat[14] = t[2];
-//	mat[15] = 1;
-//}
-//
-//void DrawBox(PxShape* pShape) {
-//	PxTransform pT = PxShapeExt::getGlobalPose(*pShape);
-//	PxBoxGeometry bg;
-//	pShape->getBoxGeometry(bg);
-//	PxMat33 m = PxMat33Legacy(pT.q);
-//	float mat[16];
-//	getColumnMajor(m, pT.p, mat);
-//	glPushMatrix();
-//	glMultMatrixf(mat);
-//	glutSolidCube(bg.halfExtents.x * 2);
-//	glPopMatrix();
-//}
-//
-//void DrawShape(PxShape* shape)
-//{
-//	PxGeometryType::Enum type = shape->getGeometryType();
-//	switch (type)
-//	{
-//	case PxGeometryType::eBOX:
-//		DrawBox(shape);
-//		break;
-//	}
-//}
-//
-//void DrawActor(PxRigidActor* actor)
-//{
-//	PxU32 nShapes = actor->getNbShapes();
-//	PxShape** shapes = new PxShape*[nShapes];
-//
-//	actor->getShapes(shapes, nShapes);
-//	while (nShapes--)
-//	{
-//		DrawShape(shapes[nShapes]);
-//	}
-//	delete[] shapes;
-//}
 
-//void RenderActors()
-//{
-//	// Render all the actors in the scene 
-//
-//	DrawActor(box);
-//}
+static float gCylinderData[] = {
+	1.0f,0.0f,1.0f,1.0f,0.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,0.0f,
+	0.866025f,0.500000f,1.0f,0.866025f,0.500000f,1.0f,0.866025f,0.500000f,0.0f,0.866025f,0.500000f,0.0f,
+	0.500000f,0.866025f,1.0f,0.500000f,0.866025f,1.0f,0.500000f,0.866025f,0.0f,0.500000f,0.866025f,0.0f,
+	-0.0f,1.0f,1.0f,-0.0f,1.0f,1.0f,-0.0f,1.0f,0.0f,-0.0f,1.0f,0.0f,
+	-0.500000f,0.866025f,1.0f,-0.500000f,0.866025f,1.0f,-0.500000f,0.866025f,0.0f,-0.500000f,0.866025f,0.0f,
+	-0.866025f,0.500000f,1.0f,-0.866025f,0.500000f,1.0f,-0.866025f,0.500000f,0.0f,-0.866025f,0.500000f,0.0f,
+	-1.0f,-0.0f,1.0f,-1.0f,-0.0f,1.0f,-1.0f,-0.0f,0.0f,-1.0f,-0.0f,0.0f,
+	-0.866025f,-0.500000f,1.0f,-0.866025f,-0.500000f,1.0f,-0.866025f,-0.500000f,0.0f,-0.866025f,-0.500000f,0.0f,
+	-0.500000f,-0.866025f,1.0f,-0.500000f,-0.866025f,1.0f,-0.500000f,-0.866025f,0.0f,-0.500000f,-0.866025f,0.0f,
+	0.0f,-1.0f,1.0f,0.0f,-1.0f,1.0f,0.0f,-1.0f,0.0f,0.0f,-1.0f,0.0f,
+	0.500000f,-0.866025f,1.0f,0.500000f,-0.866025f,1.0f,0.500000f,-0.866025f,0.0f,0.500000f,-0.866025f,0.0f,
+	0.866026f,-0.500000f,1.0f,0.866026f,-0.500000f,1.0f,0.866026f,-0.500000f,0.0f,0.866026f,-0.500000f,0.0f,
+	1.0f,0.0f,1.0f,1.0f,0.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,0.0f
+};
+
+#define MAX_NUM_MESH_VEC3S  1024
+static PxVec3 gVertexBuffer[MAX_NUM_MESH_VEC3S];
+
+void renderGeometry(const PxGeometryHolder& h)
+{
+	switch (h.getType())
+	{
+	case PxGeometryType::eBOX:
+	{
+		glScalef(h.box().halfExtents.x, h.box().halfExtents.y, h.box().halfExtents.z);
+		glutSolidCube(2.0);
+	}
+	break;
+	case PxGeometryType::eSPHERE:
+	{
+		glutSolidSphere(GLdouble(h.sphere().radius), 10, 10);
+	}
+	break;
+	case PxGeometryType::eCAPSULE:
+	{
+
+		const PxF32 radius = h.capsule().radius;
+		const PxF32 halfHeight = h.capsule().halfHeight;
+
+		//Sphere
+		glPushMatrix();
+		glTranslatef(halfHeight, 0.0f, 0.0f);
+		glScalef(radius, radius, radius);
+		glutSolidSphere(1, 10, 10);
+		glPopMatrix();
+
+		//Sphere
+		glPushMatrix();
+		glTranslatef(-halfHeight, 0.0f, 0.0f);
+		glScalef(radius, radius, radius);
+		glutSolidSphere(1, 10, 10);
+		glPopMatrix();
+
+		//Cylinder
+		glPushMatrix();
+		glTranslatef(-halfHeight, 0.0f, 0.0f);
+		glScalef(2.0f*halfHeight, radius, radius);
+		glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 2 * 3 * sizeof(float), gCylinderData);
+		glNormalPointer(GL_FLOAT, 2 * 3 * sizeof(float), gCylinderData + 3);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 13 * 2);
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glPopMatrix();
+	}
+	break;
+	case PxGeometryType::eCONVEXMESH:
+	{
+
+		//Compute triangles for each polygon.
+		const PxVec3 scale = h.convexMesh().scale.scale;
+		PxConvexMesh* mesh = h.convexMesh().convexMesh;
+		const PxU32 nbPolys = mesh->getNbPolygons();
+		const PxU8* polygons = mesh->getIndexBuffer();
+		const PxVec3* verts = mesh->getVertices();
+		PxU32 nbVerts = mesh->getNbVertices();
+		PX_UNUSED(nbVerts);
+
+		PxU32 numTotalTriangles = 0;
+		for (PxU32 i = 0; i < nbPolys; i++)
+		{
+			PxHullPolygon data;
+			mesh->getPolygonData(i, data);
+
+			const PxU32 nbTris = PxU32(data.mNbVerts - 2);
+			const PxU8 vref0 = polygons[data.mIndexBase + 0];
+			PX_ASSERT(vref0 < nbVerts);
+			for (PxU32 j = 0; j < nbTris; j++)
+			{
+				const PxU32 vref1 = polygons[data.mIndexBase + 0 + j + 1];
+				const PxU32 vref2 = polygons[data.mIndexBase + 0 + j + 2];
+
+				//generate face normal:
+				PxVec3 e0 = verts[vref1] - verts[vref0];
+				PxVec3 e1 = verts[vref2] - verts[vref0];
+
+				PX_ASSERT(vref1 < nbVerts);
+				PX_ASSERT(vref2 < nbVerts);
+
+				PxVec3 fnormal = e0.cross(e1);
+				fnormal.normalize();
+
+				if (numTotalTriangles * 6 < MAX_NUM_MESH_VEC3S)
+				{
+					gVertexBuffer[numTotalTriangles * 6 + 0] = fnormal;
+					gVertexBuffer[numTotalTriangles * 6 + 1] = verts[vref0];
+					gVertexBuffer[numTotalTriangles * 6 + 2] = fnormal;
+					gVertexBuffer[numTotalTriangles * 6 + 3] = verts[vref1];
+					gVertexBuffer[numTotalTriangles * 6 + 4] = fnormal;
+					gVertexBuffer[numTotalTriangles * 6 + 5] = verts[vref2];
+					numTotalTriangles++;
+				}
+			}
+		}
+		glPushMatrix();
+		glScalef(scale.x, scale.y, scale.z);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glNormalPointer(GL_FLOAT, 2 * 3 * sizeof(float), gVertexBuffer);
+		glVertexPointer(3, GL_FLOAT, 2 * 3 * sizeof(float), gVertexBuffer + 1);
+		glDrawArrays(GL_TRIANGLES, 0, int(numTotalTriangles * 3));
+		glPopMatrix();
+	}
+	break;
+	case PxGeometryType::eTRIANGLEMESH:
+	{
+		const PxTriangleMeshGeometry& triGeom = h.triangleMesh();
+		const PxTriangleMesh& mesh = *triGeom.triangleMesh;
+		const PxVec3 scale = triGeom.scale.scale;
+
+		const PxU32 triangleCount = mesh.getNbTriangles();
+		const PxU32 has16BitIndices = mesh.getTriangleMeshFlags() & PxTriangleMeshFlag::e16_BIT_INDICES;
+		const void* indexBuffer = mesh.getTriangles();
+
+		const PxVec3* vertexBuffer = mesh.getVertices();
+
+		const PxU32* intIndices = reinterpret_cast<const PxU32*>(indexBuffer);
+		const PxU16* shortIndices = reinterpret_cast<const PxU16*>(indexBuffer);
+		PxU32 numTotalTriangles = 0;
+		for (PxU32 i = 0; i < triangleCount; ++i)
+		{
+			PxVec3 triVert[3];
+
+			if (has16BitIndices)
+			{
+				triVert[0] = vertexBuffer[*shortIndices++];
+				triVert[1] = vertexBuffer[*shortIndices++];
+				triVert[2] = vertexBuffer[*shortIndices++];
+			}
+			else
+			{
+				triVert[0] = vertexBuffer[*intIndices++];
+				triVert[1] = vertexBuffer[*intIndices++];
+				triVert[2] = vertexBuffer[*intIndices++];
+			}
+
+			PxVec3 fnormal = (triVert[1] - triVert[0]).cross(triVert[2] - triVert[0]);
+			fnormal.normalize();
+
+			if (numTotalTriangles * 6 < MAX_NUM_MESH_VEC3S)
+			{
+				gVertexBuffer[numTotalTriangles * 6 + 0] = fnormal;
+				gVertexBuffer[numTotalTriangles * 6 + 1] = triVert[0];
+				gVertexBuffer[numTotalTriangles * 6 + 2] = fnormal;
+				gVertexBuffer[numTotalTriangles * 6 + 3] = triVert[1];
+				gVertexBuffer[numTotalTriangles * 6 + 4] = fnormal;
+				gVertexBuffer[numTotalTriangles * 6 + 5] = triVert[2];
+				numTotalTriangles++;
+			}
+		}
+		glPushMatrix();
+		glScalef(scale.x, scale.y, scale.z);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glNormalPointer(GL_FLOAT, 2 * 3 * sizeof(float), gVertexBuffer);
+		glVertexPointer(3, GL_FLOAT, 2 * 3 * sizeof(float), gVertexBuffer + 1);
+		glDrawArrays(GL_TRIANGLES, 0, int(numTotalTriangles * 3));
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glPopMatrix();
+	}
+	break;
+	case PxGeometryType::eINVALID:
+	case PxGeometryType::eHEIGHTFIELD:
+	case PxGeometryType::eGEOMETRY_COUNT:
+	case PxGeometryType::ePLANE:
+		break;
+	}
+}
 
 
 
-//
-//void ShutdownPhysX() {
-//	gScene->removeActor(*box);
-//	gScene->release();
-//	box->release();
-//	gPhysicsSDK->release();
-//}
+
+void setupDefaultRenderState()
+{
+	// Setup default render states
+	glClearColor(0.3f, 0.4f, 0.5f, 1.0);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_COLOR_MATERIAL);
+
+	// Setup lighting
+	glEnable(GL_LIGHTING);
+	PxReal ambientColor[] = { 0.0f, 0.1f, 0.2f, 0.0f };
+	PxReal diffuseColor[] = { 1.0f, 1.0f, 1.0f, 0.0f };
+	PxReal specularColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	PxReal position[] = { 100.0f, 100.0f, 400.0f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientColor);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseColor);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specularColor);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	glEnable(GL_LIGHT0);
+}
+
+
+void startRender(const PxVec3& cameraEye, const PxVec3& cameraDir, PxReal clipNear, PxReal clipFar)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Setup camera
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(60.0, GLdouble(glutGet(GLUT_WINDOW_WIDTH)) / GLdouble(glutGet(GLUT_WINDOW_HEIGHT)), GLdouble(clipNear), GLdouble(clipFar));
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(GLdouble(cameraEye.x), GLdouble(cameraEye.y), GLdouble(cameraEye.z), GLdouble(cameraEye.x + cameraDir.x), GLdouble(cameraEye.y + cameraDir.y), GLdouble(cameraEye.z + cameraDir.z), 0.0, 1.0, 0.0);
+
+	glColor4f(0.4f, 0.4f, 0.4f, 1.0f);
+}
+
+void renderActors(PxRigidActor** actors, const PxU32 numActors, bool shadows, const PxVec3 & color)
+{
+	PxShape* shapes[1024];
+	for (PxU32 i = 0; i < numActors; i++)
+	{
+		const PxU32 nbShapes = actors[i]->getNbShapes();
+		PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
+		actors[i]->getShapes(shapes, nbShapes);
+		bool sleeping = actors[i]->is<PxRigidDynamic>() ? actors[i]->is<PxRigidDynamic>()->isSleeping() : false;
+
+		for (PxU32 j = 0; j < nbShapes; j++)
+		{
+			const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[j], *actors[i]));
+			PxGeometryHolder h = shapes[j]->getGeometry();
+
+			if (shapes[j]->getFlags() & PxShapeFlag::eTRIGGER_SHAPE)
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+			// render object
+			glPushMatrix();
+			glMultMatrixf(reinterpret_cast<const float*>(&shapePose));
+			if (sleeping)
+			{
+				PxVec3 darkColor = color * 0.25f;
+				glColor4f(darkColor.x, darkColor.y, darkColor.z, 1.0f);
+			}
+			else
+				glColor4f(color.x, color.y, color.z, 1.0f);
+			renderGeometry(h);
+			glPopMatrix();
+
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+			if (shadows)
+			{
+				const PxVec3 shadowDir(0.0f, -0.7071067f, -0.7071067f);
+				const PxReal shadowMat[] = { 1,0,0,0, -shadowDir.x / shadowDir.y,0,-shadowDir.z / shadowDir.y,0, 0,0,1,0, 0,0,0,1 };
+				glPushMatrix();
+				glMultMatrixf(shadowMat);
+				glMultMatrixf(reinterpret_cast<const float*>(&shapePose));
+				glDisable(GL_LIGHTING);
+				glColor4f(0.1f, 0.2f, 0.3f, 1.0f);
+				renderGeometry(h);
+				glEnable(GL_LIGHTING);
+				glPopMatrix();
+			}
+		}
+	}
+}
+
+void finishRender()
+{
+	glutSwapBuffers();
+}
+
+void getColumnMajor(PxMat33 m, PxVec3 t, float* mat) {
+	mat[0] = m.column0[0];
+	mat[1] = m.column0[1];
+	mat[2] = m.column0[2];
+	mat[3] = 0;
+
+	mat[4] = m.column1[0];
+	mat[5] = m.column1[1];
+	mat[6] = m.column1[2];
+	mat[7] = 0;
+
+	mat[8] = m.column2[0];
+	mat[9] = m.column2[1];
+	mat[10] = m.column2[2];
+	mat[11] = 0;
+
+	mat[12] = t[0];
+	mat[13] = t[1];
+	mat[14] = t[2];
+	mat[15] = 1;
+}
+
+void DrawBox(PxShape* pShape) {
+	PxTransform pT = PxShapeExt::getGlobalPose(*pShape, *pShape->getActor());
+	PxBoxGeometry bg;
+	pShape->getBoxGeometry(bg);
+	PxMat33 m = PxMat33(pT.q);
+	float mat[16];
+	getColumnMajor(m, pT.p, mat);
+	glPushMatrix();
+	glMultMatrixf(mat);
+	glutSolidCube(bg.halfExtents.x * 2);
+	glPopMatrix();
+}
+
+void DrawShape(PxShape* shape)
+{
+	PxGeometryType::Enum type = shape->getGeometryType();
+	switch (type)
+	{
+	case PxGeometryType::eBOX:
+		DrawBox(shape);
+		break;
+	}
+}
+
+void DrawActor(PxRigidActor* actor)
+{
+	PxU32 nShapes = actor->getNbShapes();
+	PxShape** shapes = new PxShape*[nShapes];
+
+	actor->getShapes(shapes, nShapes);
+	while (nShapes--)
+	{
+		DrawShape(shapes[nShapes]);
+	}
+	delete[] shapes;
+}
+void renderActors(physx::PxRigidActor** actors, const physx::PxU32 numActors, bool shadows = false, const physx::PxVec3 & color = physx::PxVec3(0.0f, 0.75f, 0.0f));
+
+void RenderActors()
+{
+	// Render all the actors in the scene 
+	PxScene* scene;
+	PxGetPhysics().getScenes(&scene, 1);
+	PxU32 nbActors = scene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC);
+	if (nbActors)
+	{
+		std::vector<PxRigidActor*> actors(nbActors);
+		scene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor**>(&actors[0]), nbActors);
+		renderActors(&actors[0], static_cast<PxU32>(actors.size()), true);
+	}
+}
+
+void ShutdownPhysX() {
+	gScene->release();
+	gDispatcher->release();
+	gPhysics->release();
+	PxPvdTransport* transport = gPvd->getTransport();
+	gPvd->release();
+	transport->release();
+
+	gFoundation->release();
+}
 
 void InitGL() {
 	glEnable(GL_CULL_FACE);
@@ -400,27 +569,33 @@ void OnReshape(int nw, int nh) {
 	gluPerspective(60, (GLfloat)nw / (GLfloat)nh, 0.1f, 100.0f);
 	glMatrixMode(GL_MODELVIEW);
 }
-
+void stepPhysics(PxReal timeStep)
+{
+	gScene->simulate(timeStep);
+	gScene->fetchResults(true);
+}
 char buffer[MAX_PATH];
 void OnRender() {
 	//Calculate fps
 	totalFrames++;
 	int current = glutGet(GLUT_ELAPSED_TIME);
-	if ((current - startTime)>1000)
+	float elapsedTime = float(current - startTime);
+	static float lastfpsTime = 0.0f;
+	if ((current - lastfpsTime) > 1000.0f)
 	{
-		float elapsedTime = float(current - startTime);
-		fps = ((totalFrames * 1000.0f) / elapsedTime);
-		startTime = current;
+		fps = ((totalFrames * 1000.0f) / ((current - lastfpsTime)));
 		totalFrames = 0;
+		lastfpsTime = current;
 	}
+	startTime = current;
 
 	sprintf_s(buffer, "FPS: %3.2f", fps);
 
 	//Update PhysX	
-	//if (gScene)
-	//{
-	//	StepPhysX();
-	//}
+	if (gScene)
+	{
+		stepPhysics(elapsedTime / 1000.0f);
+	}
 
 
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -434,7 +609,7 @@ void OnRender() {
 	DrawGrid(10);
 
 	glEnable(GL_LIGHTING);
-	//RenderActors();
+	RenderActors();
 	glDisable(GL_LIGHTING);
 
 	SetOrthoForFont();
@@ -448,7 +623,7 @@ void OnRender() {
 }
 
 void OnShutdown() {
-	//ShutdownPhysX();
+	ShutdownPhysX();
 }
 
 
@@ -500,10 +675,10 @@ int main(int argc, char** argv)
 	glutMouseFunc(Mouse);
 	glutMotionFunc(Motion);
 	InitGL();
-	//InitializePhysX();
+	InitializePhysX();
 
 	glutMainLoop();
 
-    return 0;
+	return 0;
 }
 
