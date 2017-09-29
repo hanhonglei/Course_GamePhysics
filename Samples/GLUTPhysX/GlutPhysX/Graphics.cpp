@@ -119,11 +119,12 @@ void renderGeometry(const PxGeometryHolder& h)
 	{
 		glScalef(h.box().halfExtents.x, h.box().halfExtents.y, h.box().halfExtents.z);
 		glutSolidCube(2.0);
+
 	}
 	break;
 	case PxGeometryType::eSPHERE:
 	{
-		glutSolidSphere(GLdouble(h.sphere().radius), 10, 10);
+		glutSolidSphere(GLdouble(h.sphere().radius), 100, 100);
 	}
 	break;
 	case PxGeometryType::eCAPSULE:

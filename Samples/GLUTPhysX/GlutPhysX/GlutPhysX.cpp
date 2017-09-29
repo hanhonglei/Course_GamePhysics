@@ -99,7 +99,7 @@ void OnRender() {
 
 	//Draw the grid and axes
 	DrawAxes();
-	DrawGrid(10);
+	DrawGrid(100);
 	// draw physics objects
 	glEnable(GL_LIGHTING);
 	RenderPhysXScene();

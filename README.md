@@ -3,7 +3,7 @@ Concentrate on how to do physics simulation in digital games, and use physics to
 
 [NVIDIA PhysX](https://developer.nvidia.com/physx-sdk) will be used as an example.
 
-You have to register through [Github](http://www.github.com/) to access the PhysX repository. Please follow the instrction [here](https://developer.nvidia.com/physx-source-github).
+You have to register through [Github](http://www.github.com/) to access the PhysX repository. Please follow the instruction [here](https://developer.nvidia.com/physx-source-github).
 
 ## Other competitor physics engines
 1. [HAVOK® PHYSICS](https://www.havok.com/physics/)
