@@ -18,7 +18,7 @@ void AddBullet(const PxVec3& pos, const PxVec3& v)
 	PxTransform localTmS(pos);
 	PxRigidDynamic *body = gPhysics->createRigidDynamic(localTmS);
 	body->attachShape(*shape);
-	PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	PxRigidBodyExt::updateMassAndInertia(*body, 100.0f);
 	body->setLinearVelocity(v);
 	gScene->addActor(*body);
 

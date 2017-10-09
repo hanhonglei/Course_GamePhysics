@@ -49,11 +49,12 @@ void Mouse(int button, int s, int x, int y)
 	else
 		state = 1;
 
-	if (s == GLUT_UP)
+	if (s == GLUT_UP|GLUT_LEFT_BUTTON)
 	{
 		shoot = true;
 		glutPostRedisplay();
 	}
+
 }
 // camera adjust
 void Motion(int x, int y)
@@ -118,9 +119,33 @@ void OnRender() {
 			0.0, matModelView, matProjection, viewport,
 			&camera_pos[0], &camera_pos[1], &camera_pos[2]);
 
-		PxVec3 p(camera_pos[0], camera_pos[1], camera_pos[2]);
-		AddBullet(p, -p.getNormalized() * 10.0f);
+		//PxVec3 p(camera_pos[0], camera_pos[1], camera_pos[2]);
+		//AddBullet(p, -p.getNormalized() * 10.0f);
 		shoot = false;
+
+		//
+		//GLdouble mpos[3];
+		//gluUnProject(oldX, oldY, 0,
+		//	matModelView,
+		//	matProjection, viewport, &mpos[0], &mpos[1], &mpos[2]);
+		GLfloat winX, winY, winZ; //variables to hold screen x,y,z coordinates
+		GLdouble worldX, worldY, worldZ; //variables to hold world x,y,z coordinates
+
+		winX = (float)oldX;
+		winY = (float)viewport[3] - (float)oldY;
+		glReadPixels(winX, winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+
+
+		//get the world coordinates from the screen coordinates
+		gluUnProject(winX, winY, 0.0, matModelView, matProjection
+			, viewport, &worldX, &worldY, &worldZ);
+		GLdouble fx, fy, fz;
+		gluUnProject(winX, winY, 1.0, matModelView, matProjection
+			, viewport, &fx, &fy, &fz);
+
+		PxVec3 pp(worldX, worldY, worldZ);
+		PxVec3 vv(fx - worldX, fy - worldY, fz - worldZ);
+		AddBullet(pp, vv.getNormalized() * 10.0f);
 	}
 	//Draw the grid and axes
 	DrawAxes();
