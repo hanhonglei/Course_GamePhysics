@@ -11,6 +11,30 @@ PxScene*				gScene = NULL;
 PxMaterial*				gMaterial = NULL;
 PxPvd*                  gPvd = NULL;
 
+// add modification contact
+class MyContactModification : public PxContactModifyCallback
+{
+		void onContactModify(PxContactModifyPair* const pairs, PxU32 count);
+};
+void MyContactModification::onContactModify(PxContactModifyPair *const pairs, PxU32 count)
+{
+	for (PxU32 i = 0; i < count; i++)
+	{
+		const PxRigidActor** actors = pairs[i].actor;
+		const PxShape** shapes = pairs[i].shape;
+		pairs[i].contacts.setInvMassScale1(0.f);
+
+		//Search for actors that represent vehicles and shapes that represent wheels.
+		for (PxU32 j = 0; j < 2; j++)
+		{
+			const PxActor* actor = actors[j];
+		}
+	}
+}
+
+MyContactModification gModContactReportCallback;
+
+
 PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
 	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
@@ -26,7 +50,8 @@ PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, Px
 	pairFlags = PxPairFlag::eSOLVE_CONTACT | PxPairFlag::eDETECT_DISCRETE_CONTACT
 		| PxPairFlag::eNOTIFY_TOUCH_FOUND
 		| PxPairFlag::eNOTIFY_TOUCH_PERSISTS
-		| PxPairFlag::eNOTIFY_CONTACT_POINTS;
+		| PxPairFlag::eNOTIFY_CONTACT_POINTS
+		| PxPairFlag::eMODIFY_CONTACTS;
 	return PxFilterFlag::eDEFAULT;
 }
 
@@ -60,9 +85,9 @@ class ContactReportCallback : public PxSimulationEventCallback
 			{
 				contactPoints.resize(contactCount);
 				pairs[i].extractContacts(&contactPoints[0], contactCount);
-				//for (PxU32 j = 0; j<contactCount; j++)
-				//	printf("(%f,%f,%f)\n", contactPoints[j].position.x, contactPoints[j].position.y
-				//		, contactPoints[j].position.z);
+				for (PxU32 j = 0; j<contactCount; j++)
+					printf("(%f,%f,%f)\n", contactPoints[j].position.x, contactPoints[j].position.y
+						, contactPoints[j].position.z);
 				//for (PxU32 j = 0; j<contactCount; j++)
 				//{
 				//	gContactPositions.push_back(contactPoints[j].position);
@@ -215,7 +240,8 @@ void InitializePhysX() {
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = contactReportFilterShader/*PxDefaultSimulationFilterShader*/;
-	sceneDesc.simulationEventCallback = &gContactReportCallback;
+	sceneDesc.simulationEventCallback = &gContactReportCallback;	// contact callback
+	sceneDesc.contactModifyCallback = &gModContactReportCallback;	// modification contact callback
 	gScene = gPhysics->createScene(sceneDesc);
 
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
