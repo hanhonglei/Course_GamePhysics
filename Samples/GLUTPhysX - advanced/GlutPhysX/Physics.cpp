@@ -68,7 +68,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 			if (pairs[i].flags & (PxTriggerPairFlag::eREMOVED_SHAPE_TRIGGER |
 				PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
 				continue;
-			printf("Trigger:%d-%d\n", pairs[i].otherShape, pairs[i].triggerShape);
+			//printf("Trigger:%d-%d\n", pairs[i].otherShape, pairs[i].triggerShape);
 		}
 	}
 	void onAdvance(const PxRigidBody*const*, const PxTransform*, const PxU32) {}
@@ -85,9 +85,9 @@ class ContactReportCallback : public PxSimulationEventCallback
 			{
 				contactPoints.resize(contactCount);
 				pairs[i].extractContacts(&contactPoints[0], contactCount);
-				for (PxU32 j = 0; j<contactCount; j++)
-					printf("(%f,%f,%f)\n", contactPoints[j].position.x, contactPoints[j].position.y
-						, contactPoints[j].position.z);
+				//for (PxU32 j = 0; j<contactCount; j++)
+				//	printf("(%f,%f,%f)\n", contactPoints[j].position.x, contactPoints[j].position.y
+				//		, contactPoints[j].position.z);
 				//for (PxU32 j = 0; j<contactCount; j++)
 				//{
 				//	gContactPositions.push_back(contactPoints[j].position);
