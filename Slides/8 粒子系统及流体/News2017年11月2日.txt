@@ -1,0 +1,3 @@
+The PhysX particle feature has been deprecated in PhysX version 3.4. The standalone library PhysX FleX is an alternative with a richer feature set.
+
+https://developer.nvidia.com/flex
