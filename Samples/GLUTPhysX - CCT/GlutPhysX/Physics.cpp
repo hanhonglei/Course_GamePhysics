@@ -313,7 +313,6 @@ void MoveCharacter(unsigned char key)
 		break;
 	}
 	gController->move(PxVec3(x, 0.f, z), 0.01f, 0.1f, PxControllerFilters());
-
 }
 
 // add a bullet in the scene
