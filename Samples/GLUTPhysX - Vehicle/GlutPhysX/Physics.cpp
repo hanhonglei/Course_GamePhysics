@@ -50,6 +50,275 @@ PxPlane gPlanes[5] = {
 PxCloth*				 gCloth = NULL;
 PxTransform gPose = PxTransform(PxVec3(0), PxQuat(PxPi / 4, PxVec3(0, 1, 0))) * PxTransform(PxVec3(1, 0.5f, 0));
 
+
+PxDefaultAllocator		gAllocator;
+PxDefaultErrorCallback	gErrorCallback;
+
+PxFoundation*			gFoundation = NULL;
+PxPhysics*				gPhysics = NULL;
+
+PxDefaultCpuDispatcher*	gDispatcher = NULL;
+PxScene*				gScene = NULL;
+
+PxCooking*				gCooking = NULL;
+
+PxMaterial*				gMaterial = NULL;
+
+PxPvd*                  gPvd = NULL;
+
+VehicleSceneQueryData*	gVehicleSceneQueryData = NULL;
+PxBatchQuery*			gBatchQuery = NULL;
+
+PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
+
+PxRigidStatic*			gGroundPlane = NULL;
+PxVehicleDrive4W*		gVehicle4W = NULL;
+
+bool					gIsVehicleInAir = true;
+
+PxF32 gSteerVsForwardSpeedData[2 * 8] =
+{
+	0.0f,		0.75f,
+	5.0f,		0.75f,
+	30.0f,		0.125f,
+	120.0f,		0.1f,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32
+};
+PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
+
+PxVehicleKeySmoothingData gKeySmoothingData =
+{
+	{
+		6.0f,	//rise rate eANALOG_INPUT_ACCEL
+		6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+		6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+		2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
+		2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+	},
+	{
+		10.0f,	//fall rate eANALOG_INPUT_ACCEL
+		10.0f,	//fall rate eANALOG_INPUT_BRAKE		
+		10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+		5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
+		5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
+	}
+};
+
+PxVehiclePadSmoothingData gPadSmoothingData =
+{
+	{
+		6.0f,	//rise rate eANALOG_INPUT_ACCEL
+		6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+		6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+		2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
+		2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+	},
+	{
+		10.0f,	//fall rate eANALOG_INPUT_ACCEL
+		10.0f,	//fall rate eANALOG_INPUT_BRAKE		
+		10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+		5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
+		5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
+	}
+};
+
+PxVehicleDrive4WRawInputData gVehicleInputData;
+
+enum DriveMode
+{
+	eDRIVE_MODE_ACCEL_FORWARDS = 0,
+	eDRIVE_MODE_ACCEL_REVERSE,
+	eDRIVE_MODE_HARD_TURN_LEFT,
+	eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
+	eDRIVE_MODE_HARD_TURN_RIGHT,
+	eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
+	eDRIVE_MODE_BRAKE,
+	eDRIVE_MODE_NONE
+};
+
+DriveMode gDriveModeOrder[] =
+{
+	eDRIVE_MODE_BRAKE,
+	eDRIVE_MODE_ACCEL_FORWARDS,
+	eDRIVE_MODE_BRAKE,
+	eDRIVE_MODE_ACCEL_REVERSE,
+	eDRIVE_MODE_BRAKE,
+	eDRIVE_MODE_HARD_TURN_LEFT,
+	eDRIVE_MODE_BRAKE,
+	eDRIVE_MODE_HARD_TURN_RIGHT,
+	eDRIVE_MODE_ACCEL_FORWARDS,
+	eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
+	eDRIVE_MODE_ACCEL_FORWARDS,
+	eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
+	eDRIVE_MODE_NONE
+};
+
+PxF32					gVehicleModeLifetime = 4.0f;
+PxF32					gVehicleModeTimer = 0.0f;
+PxU32					gVehicleOrderProgress = 0;
+bool					gVehicleOrderComplete = false;
+bool					gMimicKeyInputs = false;
+
+VehicleDesc initVehicleDesc()
+{
+	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
+	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
+	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
+	const PxF32 chassisMass = 1500.0f;
+	const PxVec3 chassisDims(2.5f, 2.0f, 5.0f);
+	const PxVec3 chassisMOI
+	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
+		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass / 12.0f,
+		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass / 12.0f);
+	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.65f, 0.25f);
+
+	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
+	//Moment of inertia is just the moment of inertia of a cylinder.
+	const PxF32 wheelMass = 20.0f;
+	const PxF32 wheelRadius = 0.5f;
+	const PxF32 wheelWidth = 0.4f;
+	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius;
+	const PxU32 nbWheels = 6;
+
+	VehicleDesc vehicleDesc;
+
+	vehicleDesc.chassisMass = chassisMass;
+	vehicleDesc.chassisDims = chassisDims;
+	vehicleDesc.chassisMOI = chassisMOI;
+	vehicleDesc.chassisCMOffset = chassisCMOffset;
+	vehicleDesc.chassisMaterial = gMaterial;
+	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_CHASSIS, COLLISION_FLAG_CHASSIS_AGAINST, 0, 0);
+
+	vehicleDesc.wheelMass = wheelMass;
+	vehicleDesc.wheelRadius = wheelRadius;
+	vehicleDesc.wheelWidth = wheelWidth;
+	vehicleDesc.wheelMOI = wheelMOI;
+	vehicleDesc.numWheels = nbWheels;
+	vehicleDesc.wheelMaterial = gMaterial;
+	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
+
+	return vehicleDesc;
+}
+
+void startAccelerateForwardsMode()
+{
+	if (gMimicKeyInputs)
+	{
+		gVehicleInputData.setDigitalAccel(true);
+	}
+	else
+	{
+		gVehicleInputData.setAnalogAccel(1.0f);
+	}
+}
+
+void startAccelerateReverseMode()
+{
+	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+
+	if (gMimicKeyInputs)
+	{
+		gVehicleInputData.setDigitalAccel(true);
+	}
+	else
+	{
+		gVehicleInputData.setAnalogAccel(1.0f);
+	}
+}
+
+void startBrakeMode()
+{
+	if (gMimicKeyInputs)
+	{
+		gVehicleInputData.setDigitalBrake(true);
+	}
+	else
+	{
+		gVehicleInputData.setAnalogBrake(1.0f);
+	}
+}
+
+void startTurnHardLeftMode()
+{
+	if (gMimicKeyInputs)
+	{
+		gVehicleInputData.setDigitalAccel(true);
+		gVehicleInputData.setDigitalSteerLeft(true);
+	}
+	else
+	{
+		gVehicleInputData.setAnalogAccel(true);
+		gVehicleInputData.setAnalogSteer(-1.0f);
+	}
+}
+
+void startTurnHardRightMode()
+{
+	if (gMimicKeyInputs)
+	{
+		gVehicleInputData.setDigitalAccel(true);
+		gVehicleInputData.setDigitalSteerRight(true);
+	}
+	else
+	{
+		gVehicleInputData.setAnalogAccel(1.0f);
+		gVehicleInputData.setAnalogSteer(1.0f);
+	}
+}
+
+void startHandbrakeTurnLeftMode()
+{
+	if (gMimicKeyInputs)
+	{
+		gVehicleInputData.setDigitalSteerLeft(true);
+		gVehicleInputData.setDigitalHandbrake(true);
+	}
+	else
+	{
+		gVehicleInputData.setAnalogSteer(-1.0f);
+		gVehicleInputData.setAnalogHandbrake(1.0f);
+	}
+}
+
+void startHandbrakeTurnRightMode()
+{
+	if (gMimicKeyInputs)
+	{
+		gVehicleInputData.setDigitalSteerRight(true);
+		gVehicleInputData.setDigitalHandbrake(true);
+	}
+	else
+	{
+		gVehicleInputData.setAnalogSteer(1.0f);
+		gVehicleInputData.setAnalogHandbrake(1.0f);
+	}
+}
+
+
+void releaseAllControls()
+{
+	if (gMimicKeyInputs)
+	{
+		gVehicleInputData.setDigitalAccel(false);
+		gVehicleInputData.setDigitalSteerLeft(false);
+		gVehicleInputData.setDigitalSteerRight(false);
+		gVehicleInputData.setDigitalBrake(false);
+		gVehicleInputData.setDigitalHandbrake(false);
+	}
+	else
+	{
+		gVehicleInputData.setAnalogAccel(0.0f);
+		gVehicleInputData.setAnalogSteer(0.0f);
+		gVehicleInputData.setAnalogBrake(0.0f);
+		gVehicleInputData.setAnalogHandbrake(0.0f);
+	}
+}
+
+
+
 void createCloth()
 {
 	// create regular mesh
