@@ -18,6 +18,8 @@ You have to register through [Github](http://www.github.com/) to access the Phys
 
 All samples have been compiled successfully using [Visual Studio 2015]( https://www.visualstudio.com) which is vc14win32.
 
+If you want to use Visual Studio 2017, you have to install 2015 component as well. Because there is not fully support for 2017. So first install VC++ 2015 v140 using VS 2017 installer. Then open solution in the compiler folder vc14 instead of vc15. 
+
 ----
 
 - This project is under [GNU GENERAL PUBLIC LICENSE](https://www.gnu.org/licenses/), please check it in the root folder.
