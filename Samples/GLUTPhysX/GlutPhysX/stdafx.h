@@ -51,5 +51,5 @@
 #pragma comment(lib, "PhysX3CommonDEBUG_X86.lib")
 #pragma comment(lib, "PxFoundationDEBUG_X86.lib")
 #pragma comment(lib, "PhysX3ExtensionsDEBUG.lib")
-#pragma comment(lib, "PxPvdSDKDEBUG_x86.lib")
+//#pragma comment(lib, "PxPvdSDKDEBUG_x86.lib")
 using namespace physx;

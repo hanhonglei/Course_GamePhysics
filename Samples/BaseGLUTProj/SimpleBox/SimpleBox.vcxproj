@@ -14,6 +14,7 @@
     <ProjectGuid>{8EE0D0E5-0F7A-44A0-8B6E-EDCDB9F90A22}</ProjectGuid>
     <RootNamespace>SimpleBox</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -24,6 +25,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -49,6 +51,10 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\_Hanhonglei\Projects\include_lib;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PhysX_3.4\Include;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PxShared\include;C:\_Hanhonglei\Projects\include_lib\freeglut\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\_Hanhonglei\Projects\include_lib\freeglut\lib\x86;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PxShared\lib\vc14win32;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PhysX_3.4\Lib\vc14win32;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PhysX_3.4\Lib\vc15win32;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PxShared\lib\vc15win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

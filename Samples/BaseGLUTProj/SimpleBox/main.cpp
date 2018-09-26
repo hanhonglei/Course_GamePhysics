@@ -1,14 +1,14 @@
 #include <iostream>
 #include <GL/freeglut.h>
 #include <PxPhysicsAPI.h> 
-#include <PxExtensionsAPI.h> 
-#include <PxDefaultErrorCallback.h>
-#include <PxDefaultAllocator.h> 
-#include <PxDefaultSimulationFilterShader.h>
-#include <PxDefaultCpuDispatcher.h>
-#include <PxShapeExt.h>
-#include <PxMat33Legacy.h> 
-#include <PxSimpleFactory.h>
+//#include <PxExtensionsAPI.h> 
+//#include <PxDefaultErrorCallback.h>
+//#include <PxDefaultAllocator.h> 
+//#include <PxDefaultSimulationFilterShader.h>
+//#include <PxDefaultCpuDispatcher.h>
+//#include <PxShapeExt.h>
+//#include <PxMat33Legacy.h> 
+//#include <PxSimpleFactory.h>
 
 using namespace std;
 using namespace physx;
