@@ -14,8 +14,8 @@ PxMaterial*				gMaterial = NULL;
 // add some physics objects into the scene
 void AddPhyObjects()
 {
-	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
-	gScene->addActor(*groundPlane);
+	//PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
+	//gScene->addActor(*groundPlane);
 
 	PxShape* shape = gPhysics->createShape(PxBoxGeometry(1.0f, 1.0f, 1.0f), *gMaterial);
 	PxTransform localTm(PxVec3(-3.0f, 5.0f, 0.f));

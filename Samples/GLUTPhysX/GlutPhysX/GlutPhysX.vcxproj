@@ -72,7 +72,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\_Hanhonglei\Projects\include_lib;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PhysX_3.4\Include;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PxShared\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\_Hanhonglei\Projects\include_lib\freeglut\lib\x86;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PxShared\lib\vc14win32;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PhysX_3.4\Lib\vc14win32;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PhysX_3.4\Lib\vc15win32;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PxShared\lib\vc15win32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\_Hanhonglei\Projects\include_lib\freeglut\lib\x86;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PhysX_3.4\Lib\vc15win32;C:\_Hanhonglei\Projects\_WorkSpace\NvidiaPhysics\PhysX-3.4\PxShared\lib\vc15win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
