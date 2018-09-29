@@ -4,6 +4,7 @@
 #define MAX_NUM_MESH_VEC3S  1024
 static PxVec3 gVertexBuffer[MAX_NUM_MESH_VEC3S];
 
+// 用于圆柱体的绘制
 static float gCylinderData[] = {
 	1.0f,0.0f,1.0f,1.0f,0.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,0.0f,
 	0.866025f,0.500000f,1.0f,0.866025f,0.500000f,1.0f,0.866025f,0.500000f,0.0f,0.866025f,0.500000f,0.0f,
@@ -55,7 +56,7 @@ void RenderSpacedBitmapString(
 		x1 = x1 + glutBitmapWidth(font, *c) + spacing;
 	}
 }
-
+// 绘制坐标轴
 void DrawAxes()
 {
 	//To prevent the view from disturbed on repaint
@@ -95,7 +96,7 @@ void DrawAxes()
 	glutSolidCone(0.0225, 1, 4, 1);
 	glPopMatrix();
 }
-
+// 绘制地面格子
 void DrawGrid(int GRID_SIZE)
 {
 	glBegin(GL_LINES);
@@ -110,7 +111,7 @@ void DrawGrid(int GRID_SIZE)
 	}
 	glEnd();
 }
-
+// 依据物理端提供的信息绘制对应的几何
 void renderGeometry(const PxGeometryHolder& h)
 {
 	switch (h.getType())
@@ -285,7 +286,7 @@ void renderGeometry(const PxGeometryHolder& h)
 		break;
 	}
 }
-
+// 设置OpenGL的绘制状态
 void setupDefaultRenderState()
 {
 	// Setup default render states
@@ -318,6 +319,7 @@ void renderActors(PxRigidActor** actors, const PxU32 numActors, bool shadows, co
 
 		for (PxU32 j = 0; j < nbShapes; j++)
 		{
+			// 依靠物理端获得shape的姿态矩阵
 			const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[j], *actors[i]));
 			PxGeometryHolder h = shapes[j]->getGeometry();
 
@@ -338,7 +340,7 @@ void renderActors(PxRigidActor** actors, const PxU32 numActors, bool shadows, co
 			glPopMatrix();
 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+			// 绘制阴影
 			if (shadows)
 			{
 				const PxVec3 shadowDir(0.0f, -0.7071067f, -0.7071067f);

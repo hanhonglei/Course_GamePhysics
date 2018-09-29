@@ -5,6 +5,8 @@ Concentrate on how to do physics simulation in digital games, and use physics to
 
 You have to register through [Github](http://www.github.com/) to access the PhysX repository. Please follow the instruction [here](https://developer.nvidia.com/physx-source-github).
 
+习惯使用OpenGL的，请参考提供的示例来熟悉如何在三维场景中，添加PhysX对物理体的控制，示例在samples文件夹中。可以直接[点击这里](https://github.com/hanhonglei/Course_GamePhysics/tree/master/Samples/GLUTPhysX)
+
 ## Other competitor physics engines
 1. [HAVOK® PHYSICS](https://www.havok.com/physics/)
 1. [Bullet](http://bulletphysics.org/wordpress/)

@@ -1,21 +1,12 @@
-// GlutPhysX.cpp : Defines the entry point for the console application.
-//
+// 使用Glut进行PhysX仿真的demo
+// 只使用最必要的功能
+// 利用glut进行窗口设置，以及用户交互
+// 要明白渲染端和物理仿真端两张皮原理
+// 渲染的物体的形状和变换都是通过物理端来得到的，渲染端只是被动绘制
 
 #include "stdafx.h"
 #include "Physics.h"
 #include "Graphics.h"
-
-#if PX_WINDOWS
-// Starting with Release 302 drivers, application developers can direct the Optimus driver at runtime to use the High Performance
-// Graphics to render any application; even those applications for which there is no existing application profile.
-// They can do this by exporting a global variable named PxOptimusEnablement.
-// A value of 0x00000001 indicates that rendering should be performed using High Performance Graphics.
-// A value of 0x00000000 indicates that this method should be ignored.
-extern "C"
-{
-	_declspec(dllexport) DWORD PxOptimusEnablement = 0x00000001;
-}
-#endif
 
 /*Global parameters*/
 const int	WINDOW_WIDTH = 1024,
