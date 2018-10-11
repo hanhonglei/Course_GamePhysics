@@ -112,22 +112,23 @@ void DrawGrid(int GRID_SIZE)
 	glEnd();
 }
 // 依据物理端提供的信息绘制对应的几何
-void renderGeometry(const PxGeometryHolder& h)
+void renderGeometry(const PxGeometryHolder& h, bool isShadow)
 {
 	switch (h.getType())
 	{
 	case PxGeometryType::eBOX:
 	{
-		glColor3f(1.0f, 1.f, 1.f);
+		if(!isShadow)
+			glColor3f(1.0f, 1.f, 1.f);
 
 		glScalef(h.box().halfExtents.x, h.box().halfExtents.y, h.box().halfExtents.z);
 		glutSolidCube(2.0);
-
 	}
 	break;
 	case PxGeometryType::eSPHERE:
 	{
-		glColor3f(0.0f, 1.f, 1.f);
+		if (!isShadow)
+			glColor3f(0.0f, 1.f, 1.f);
 
 		glutSolidSphere(GLdouble(h.sphere().radius), 100, 100);
 	}
@@ -355,7 +356,7 @@ void renderActors(PxRigidActor** actors, const PxU32 numActors, bool shadows, co
 				glMultMatrixf(reinterpret_cast<const float*>(&shapePose));
 				glDisable(GL_LIGHTING);
 				glColor4f(0.1f, 0.2f, 0.3f, 1.0f);
-				renderGeometry(h);
+				renderGeometry(h, true);
 				glEnable(GL_LIGHTING);
 				glPopMatrix();
 			}

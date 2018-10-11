@@ -348,7 +348,7 @@ void renderActors(PxRigidActor** actors, const PxU32 numActors, bool shadows, co
 				glMultMatrixf(reinterpret_cast<const float*>(&shapePose));
 				glDisable(GL_LIGHTING);
 				glColor4f(0.1f, 0.2f, 0.3f, 1.0f);
-				renderGeometry(h);
+				renderGeometry(h, true);
 				glEnable(GL_LIGHTING);
 				glPopMatrix();
 			}

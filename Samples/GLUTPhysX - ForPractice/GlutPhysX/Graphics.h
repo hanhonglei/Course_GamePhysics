@@ -16,7 +16,7 @@ void DrawAxes();
 
 void DrawGrid(int GRID_SIZE);
 
-void renderGeometry(const PxGeometryHolder& h);
+void renderGeometry(const PxGeometryHolder& h, bool isShadow = false);
 
 
 void setupDefaultRenderState();
