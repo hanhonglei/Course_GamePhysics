@@ -4,6 +4,7 @@
 #define MAX_NUM_MESH_VEC3S  1024
 static PxVec3 gVertexBuffer[MAX_NUM_MESH_VEC3S];
 
+// 用于圆柱体的绘制
 static float gCylinderData[] = {
 	1.0f,0.0f,1.0f,1.0f,0.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,0.0f,
 	0.866025f,0.500000f,1.0f,0.866025f,0.500000f,1.0f,0.866025f,0.500000f,0.0f,0.866025f,0.500000f,0.0f,
@@ -55,7 +56,7 @@ void RenderSpacedBitmapString(
 		x1 = x1 + glutBitmapWidth(font, *c) + spacing;
 	}
 }
-
+// 绘制坐标轴
 void DrawAxes()
 {
 	//To prevent the view from disturbed on repaint
@@ -95,7 +96,7 @@ void DrawAxes()
 	glutSolidCone(0.0225, 1, 4, 1);
 	glPopMatrix();
 }
-
+// 绘制地面格子
 void DrawGrid(int GRID_SIZE)
 {
 	glBegin(GL_LINES);
@@ -110,13 +111,15 @@ void DrawGrid(int GRID_SIZE)
 	}
 	glEnd();
 }
-
+// 依据物理端提供的信息绘制对应的几何
 void renderGeometry(const PxGeometryHolder& h)
 {
 	switch (h.getType())
 	{
 	case PxGeometryType::eBOX:
 	{
+		glColor3f(1.0f, 1.f, 1.f);
+
 		glScalef(h.box().halfExtents.x, h.box().halfExtents.y, h.box().halfExtents.z);
 		glutSolidCube(2.0);
 
@@ -124,6 +127,8 @@ void renderGeometry(const PxGeometryHolder& h)
 	break;
 	case PxGeometryType::eSPHERE:
 	{
+		glColor3f(0.0f, 1.f, 1.f);
+
 		glutSolidSphere(GLdouble(h.sphere().radius), 100, 100);
 	}
 	break;
@@ -285,7 +290,7 @@ void renderGeometry(const PxGeometryHolder& h)
 		break;
 	}
 }
-
+// 设置OpenGL的绘制状态
 void setupDefaultRenderState()
 {
 	// Setup default render states
@@ -308,6 +313,7 @@ void setupDefaultRenderState()
 // render physics actors based on their gestures
 void renderActors(PxRigidActor** actors, const PxU32 numActors, bool shadows, const PxVec3 & color)
 {
+
 	PxShape* shapes[1024];
 	for (PxU32 i = 0; i < numActors; i++)
 	{
@@ -318,6 +324,7 @@ void renderActors(PxRigidActor** actors, const PxU32 numActors, bool shadows, co
 
 		for (PxU32 j = 0; j < nbShapes; j++)
 		{
+			// 依靠物理端获得shape的姿态矩阵
 			const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[j], *actors[i]));
 			PxGeometryHolder h = shapes[j]->getGeometry();
 
@@ -338,8 +345,8 @@ void renderActors(PxRigidActor** actors, const PxU32 numActors, bool shadows, co
 			glPopMatrix();
 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-			if (shadows)
+			// 绘制阴影
+			//if (shadows)
 			{
 				const PxVec3 shadowDir(0.0f, -0.7071067f, -0.7071067f);
 				const PxReal shadowMat[] = { 1,0,0,0, -shadowDir.x / shadowDir.y,0,-shadowDir.z / shadowDir.y,0, 0,0,1,0, 0,0,0,1 };

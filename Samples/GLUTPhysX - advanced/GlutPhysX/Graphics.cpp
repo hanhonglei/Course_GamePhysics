@@ -400,6 +400,8 @@ void InitGL() {
 	glClearDepth(1.0f);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
+
+	setupDefaultRenderState();
 }
 // resize window
 void OnReshape(int nw, int nh) {
