@@ -26,6 +26,7 @@ PxJoint* createLimitedSpherical(PxRigidActor* a0, const PxTransform& t0, PxRigid
 	PxSphericalJoint* j = PxSphericalJointCreate(*gPhysics, a0, t0, a1, t1);
 	j->setLimitCone(PxJointLimitCone(PxPi / 4, PxPi / 4, 0.05f));
 	j->setSphericalJointFlag(PxSphericalJointFlag::eLIMIT_ENABLED, true);
+	j->setConstraintFlag(PxConstraintFlag::eDRIVE_LIMITS_ARE_FORCES, true);
 	return j;
 }
 
@@ -35,7 +36,7 @@ PxJoint* createLimitedSpherical(PxRigidActor* a0, const PxTransform& t0, PxRigid
 PxJoint* createBreakableFixed(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a1, const PxTransform& t1)
 {
 	PxFixedJoint* j = PxFixedJointCreate(*gPhysics, a0, t0, a1, t1);
-	j->setBreakForce(100000, 10000000);
+	j->setBreakForce(100000.0f, 100000.0f);
 	j->setConstraintFlag(PxConstraintFlag::eDRIVE_LIMITS_ARE_FORCES, true);
 	return j;
 }
@@ -47,6 +48,7 @@ PxJoint* createDampedD6(PxRigidActor* a0, const PxTransform& t0, PxRigidActor* a
 	j->setMotion(PxD6Axis::eSWING1, PxD6Motion::eFREE);
 	j->setMotion(PxD6Axis::eSWING2, PxD6Motion::eFREE);
 	j->setMotion(PxD6Axis::eTWIST, PxD6Motion::eFREE);
+
 	j->setDrive(PxD6Drive::eSLERP, PxD6JointDrive(0, 1000, FLT_MAX, true));
 	return j;
 }
@@ -57,7 +59,7 @@ typedef PxJoint* (*JointCreateFunction)(PxRigidActor* a0, const PxTransform& t0,
 
 void createChain(const PxTransform& t, PxU32 length, const PxGeometry& g, PxReal separation, JointCreateFunction createJoint)
 {
-	PxVec3 offset(separation / 2, 0, 0);
+	PxVec3 offset(separation / 2+0.1f, 0, 0);
 	PxTransform localTm(offset);
 	PxRigidDynamic* prev = NULL;
 
@@ -79,7 +81,7 @@ void AddBullet(const PxVec3& pos, const PxVec3& v)
 	PxTransform localTmS(pos);
 	PxRigidDynamic *body = gPhysics->createRigidDynamic(localTmS);
 	body->attachShape(*shape);
-	PxRigidBodyExt::updateMassAndInertia(*body, 100.0f);
+	PxRigidBodyExt::updateMassAndInertia(*body, 1000000.0f);
 	body->setLinearVelocity(v);
 	gScene->addActor(*body);
 
@@ -154,9 +156,9 @@ void InitializePhysX() {
 	// add some physics objects
 	AddPhyObjects();
 
-	createChain(PxTransform(PxVec3(10.0f, 30.0f, -30.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createLimitedSpherical);
-	createChain(PxTransform(PxVec3(0.0f, 30.0f, -30.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createBreakableFixed);
-	createChain(PxTransform(PxVec3(-10.0f, 30.0f, -30.0f)), 5, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createDampedD6);
+	createChain(PxTransform(PxVec3(15.0f, 15.0f, 0.0f)), 3, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createLimitedSpherical);
+	createChain(PxTransform(PxVec3(0.0f, 15.0f, 0.0f)), 2, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createBreakableFixed);
+	createChain(PxTransform(PxVec3(-15.0f, 15.0f, 0.0f)), 3, PxBoxGeometry(2.0f, 0.5f, 0.5f), 4.0f, createDampedD6);
 
 }
 // release PhysX

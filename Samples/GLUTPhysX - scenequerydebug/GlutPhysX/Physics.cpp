@@ -44,6 +44,13 @@ class ContactReportCallback : public PxSimulationEventCallback
 				PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
 				continue;
 			printf("Trigger:%d-%d\n", pairs[i].otherShape, pairs[i].triggerShape);
+
+			// 利用userdata，确定子弹进入的话，在进入位置，生成一个新的物体
+			//if (pairs[i].otherActor->userData != "bullet")
+			//	return;
+			//PxRigidDynamic* current = PxCreateDynamic(*gPhysics, pairs[i].otherActor->getGlobalPose(), PxBoxGeometry(0.5f, 0.5f, 0.5f), *gMaterial, 1.0f);
+			//gScene->addActor(*current);
+
 		}
 	}
 	void onAdvance(const PxRigidBody*const*, const PxTransform*, const PxU32) {}
@@ -147,6 +154,9 @@ void AddBullet(const PxVec3& pos, const PxVec3& v)
 	body->setLinearVelocity(v);
 	gScene->addActor(*body);
 
+	// 为子弹物体添加一个userdata，让外部得知这个物体是特殊的子弹物体
+	//body->userData = "bullet";
+
 	shape->release();
 }
 
@@ -238,7 +248,7 @@ void InitializePhysX() {
 	gScene->setVisualizationParameter(PxVisualizationParameter::eACTOR_AXES, 1.0f);
 	gScene->setVisualizationParameter(PxVisualizationParameter::eCOLLISION_SHAPES, 2.0f);
 	gScene->setVisualizationParameter(PxVisualizationParameter::eCONTACT_NORMAL, 2.0f);
-
+	gScene->setVisualizationParameter(PxVisualizationParameter::eJOINT_LIMITS, 1.0f);
 
 }
 // release PhysX

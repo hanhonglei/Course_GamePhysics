@@ -166,10 +166,32 @@ void OnRender() {
 }
 void Keyboard(unsigned char key, int x, int y)
 {
+	// 实现将射线查询到的物体，添加一个力，按下“Q”键进行查询并赋以一定的力
+	//if (key == 'q')
+	//{
+	//	PxVec3 origin = PxVec3(0, 2, 0);                 // [in] Ray origin
+	//	PxVec3 unitDir = PxVec3(0, 0, -1);                // [in] Normalized ray direction
+	//	PxReal maxDistance = 100.0f;            // [in] Raycast max distance
+	//	PxRaycastBuffer hit;                 // [out] Raycast results
+	//										 // Raycast against all static & dynamic objects (no filtering)
+	//										 // The main result from this call is the closest hit, stored in the 'hit.block' structure
+	//	bool status = gScene->raycast(origin, unitDir, maxDistance, hit);
+	//	if (status)
+	//	{
+	//		PxShape* shapes[1024];
+	//		const PxU32 nbShapes = hit.block.actor->getNbShapes();
+	//		hit.block.actor->getShapes(shapes, nbShapes);
+	//		PxRigidDynamic *body = hit.block.actor->is<PxRigidDynamic>();
+	//		body->addForce(PxVec3(0, 0, -1000));
+ //			PxVec3 pos = hit.block.position;
+	//		PxVec3 normal = hit.block.normal;
+	//	}
+	//}
 	if (key == 32)
 	{
 		shoot = true;
 		glutPostRedisplay();
+
 	}
 }
 // main function, register functions to glut routine
